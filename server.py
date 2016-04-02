@@ -14,7 +14,7 @@ SERVER = (IP, PORT)
 
 lock = thread.allocate_lock()
 Players = {}
-colours = ['Yellow', 'Blue', 'Red', 'Green']
+colours = ['Green', 'Red', 'Blue', 'Yellow']
 colour_index = 0
 
 LEFT = [
@@ -63,7 +63,7 @@ def player_communication(sock, addr):
                         Players[sock] = colour_index
                         colour_index += 1
                         sock.send('Connected\n')
-#                        sock.send(colours[Players[sock]] + '\n')
+                        sock.send(colours[Players[sock]] + '\n')
                     else:
                         sock.send('ERROR\n')
                         print 'Too many players'
