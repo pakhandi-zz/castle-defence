@@ -38,6 +38,13 @@ SHOOT = [
         pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
         ]
 
+REVERSE = [
+        pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
+        pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
+        pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
+        pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
+        ]
+
 def accept_connections(q):
     sock = socket(AF_INET, SOCK_STREAM)
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -78,6 +85,9 @@ def player_communication(sock, addr, q):
             if 'Shoot' in msg:
                 pygame.event.post(SHOOT[Players[sock]])
                 print 'Shoot detected from Player', str(Players[sock] + 1)
+            if 'Reverse' in msg:
+                pygame.event.post(REVERSE[Players[sock]])
+                print 'Reverse detected from Player', str(Players[sock] + 1)
             if 'Ready' in msg:
                 q.put('Ready')
             if len(msg) > 0:
