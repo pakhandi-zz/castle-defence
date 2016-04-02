@@ -35,6 +35,8 @@ def getDirection(orientation):
 
 	return deg, x, y
 
+BULLET_DAMAGE = 10
+
 width = 1200
 height = 700
 # (width, height) = (1200, 700)
@@ -219,6 +221,8 @@ def playGame(numberOfPlayers):
 	ftype = 0
 	etype = 0
 
+	bulletLifeTime = 500
+
 	rotationOffset = 10
 
 	# r = pygame.draw.rect(screen, BROWN, [200, 200, 20 , 10] )
@@ -315,16 +319,11 @@ def playGame(numberOfPlayers):
 			for j in xrange(numberOfPlayers):
 				rect = playerRectangle[j]
 				if rect.collidepoint(bullets[i].coordinate) and bulletIsAlive[i] == 1:
-					playerLife[j] = playerLife[j] - 20
+					playerLife[j] = playerLife[j] - BULLET_DAMAGE
 					if playerLife[j] <= 0:
 						playerIsAlive[j] = 0
 					bulletIsAlive[i] = 0
 
-		removed = 0
-		for i in xrange(len(bulletIsAlive)):
-			if bulletIsAlive[i] == 0:
-				bullets.pop(i - removed)
-				removed = removed + 1
 
 
 
@@ -386,8 +385,38 @@ def playGame(numberOfPlayers):
 				if rect.colliderect(electricsRectangle[i]):
 					playerIsAlive[j] = 0
 					print "Hit"
+			for j in xrange(len(bullets)):
+				point = bullets[j].coordinate
+				rect = electricsRectangle[i]
+				if rect.collidepoint(point):
+					bulletIsAlive[j] = 0
+
+		# increase living time of bullets
+		for i in xrange(len(bullets)):
+			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
+			if bullets[i].timeTravelled >= bulletLifeTime:
+				bulletIsAlive[i] = 0
+
+		# removing bullets
+		removed = 0
+		for i in xrange(len(bulletIsAlive)):
+			if bulletIsAlive[i] == 0:
+				bullets.pop(i - removed)
+				removed = removed + 1
 
 
+
+
+		# Collision of tanks
+		for i in xrange(numberOfPlayers):
+			for j in xrange(numberOfPlayers):
+				if i == j:
+					continue
+				rect1 = playerRectangle[i]
+				rect2 = playerRectangle[j]
+				if rect1.colliderect(rect2) == 1:
+					playerIsAlive[i] = 0
+					playerIsAlive[j] = 0
 
 		screen.fill(BLACK)
 
@@ -425,8 +454,6 @@ def playGame(numberOfPlayers):
 		pygame.display.update()
 		clock.tick(80)
 
-def main():
-	playGame(3)
 
 if __name__ == "__main__":
         q = Queue()
@@ -443,5 +470,5 @@ if __name__ == "__main__":
             elif msg == 'Ready':
                 ready += 1
             flag = 1
+        playGame(ready)
 
-        main()
