@@ -6,6 +6,9 @@ import server
 import thread
 from Queue import Queue
 
+pygame.init()
+pygame.display.init()
+
 class Bullet:
 
 	def __init__(self):
@@ -42,13 +45,19 @@ height = 700
 # (width, height) = (1200, 700)
 BLACK = (0, 0, 0)
 BROWN = (240,150,0)
-GREY = (128,128,128)
+GREY = (200,200,200)
 WHITE = (255,255,255)
 GREEN = (0, 155, 0)
+RED = (255,0,0)
+
+
 
 def playGame(numberOfPlayers):
 	screen = pygame.display.set_mode((width, height))
 	pygame.display.set_caption("Castle Defence")
+
+	font1 = pygame.font.SysFont('Arial', 20)
+
 	screen.fill(BLACK)
 
 	bullets = []
@@ -56,8 +65,8 @@ def playGame(numberOfPlayers):
 	# centers for the towers
 	centers = []
 	centers.append((60, 60))
-	centers.append(( width - 60, 60))
 	centers.append((width - 60, height - 60))
+	centers.append(( width - 60, 60))
 	centers.append((60, height - 60))
 
 	# walls
@@ -80,9 +89,9 @@ def playGame(numberOfPlayers):
 	# coordinate of every player
 	playerCoordinate = []
 	playerCoordinate.append((100,100))
-	playerCoordinate.append((width - 100, height - 100))
-	playerCoordinate.append((width - 100, 100))
-	playerCoordinate.append((100,height - 100))
+	playerCoordinate.append((width - 140, height - 140))
+	playerCoordinate.append((width - 140, 100))
+	playerCoordinate.append((100,height - 140))
 
 	# player cursors
 	playerCursor = []
@@ -121,6 +130,10 @@ def playGame(numberOfPlayers):
 	playerLifeBar[2] = pygame.Rect(width - 230, 40, 100, 5)
 	playerLifeBar[3] = pygame.Rect(100, height - 50, 100, 5)
 
+
+	# points
+	playerDied = [0 for i in xrange(4)]
+	playerKilled = [0 for i in xrange(4)]
 
 	# castleLife
 	castleLife = [500 for i in xrange(4)]
@@ -309,7 +322,7 @@ def playGame(numberOfPlayers):
 				elif i == 2:
 					playerCoordinate[i] = (width - 100, 100)
 				else:
-					playerCoordinate[i] = (100, width - 100)
+					playerCoordinate[i] = (100, height - 100)
 
 		# print len(bullets)
 
@@ -321,11 +334,10 @@ def playGame(numberOfPlayers):
 				if rect.collidepoint(bullets[i].coordinate) and bulletIsAlive[i] == 1:
 					playerLife[j] = playerLife[j] - BULLET_DAMAGE
 					if playerLife[j] <= 0:
+						playerDied[j] = playerDied[j] + 1
+						playerKilled[bullets[i].firedBy] += 1
 						playerIsAlive[j] = 0
 					bulletIsAlive[i] = 0
-
-
-
 
 		for i in xrange(numberOfPlayers):
 
@@ -351,40 +363,60 @@ def playGame(numberOfPlayers):
 		for i in xrange(width):
 			point = (i, 20)
 			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
 				rect = playerRectangle[j]
 				# pygame.draw.rect(screen, GREY, [rect.x, rect.y, rect.width, rect.height])
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
+					playerDied[j] += 1
 					print "Hit"
+					continue
 			point = (i, height - 20)
 			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
 				rect = playerRectangle[j]
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
+					playerDied[j] += 1
 					print "Hit"
+					continue
 
 		# collision with left and right flames
 		for i in xrange(height):
 			point = (20, i)
 			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
 				rect = playerRectangle[j]
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
+					playerDied[j] += 1
 					print "Hit"
+					continue
 			point = (width - 20, i)
 			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
 				rect = playerRectangle[j]
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
+					playerDied[j] += 1
 					print "Hit"
+					continue
 
 		# collision with electrics
 		for i in xrange(4):
 			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
 				rect = playerRectangle[j]
 				if rect.colliderect(electricsRectangle[i]):
 					playerIsAlive[j] = 0
+					playerDied[j] += 1
 					print "Hit"
+					continue
 			for j in xrange(len(bullets)):
 				point = bullets[j].coordinate
 				rect = electricsRectangle[i]
@@ -412,11 +444,15 @@ def playGame(numberOfPlayers):
 			for j in xrange(numberOfPlayers):
 				if i == j:
 					continue
+				if playerIsAlive[j] == 0:
+					continue
 				rect1 = playerRectangle[i]
 				rect2 = playerRectangle[j]
 				if rect1.colliderect(rect2) == 1:
 					playerIsAlive[i] = 0
 					playerIsAlive[j] = 0
+					playerDied[i] = playerDied[i] + 1
+					playerDied[j] = playerDied[j] + 1
 
 		screen.fill(BLACK)
 
@@ -439,8 +475,12 @@ def playGame(numberOfPlayers):
 			bullets[i].coordinate = (bullets[i].coordinate[0] +  (x * bulletDistance * math.cos(math.radians(deg ) ) ) , bullets[i].coordinate[1] + (y * bulletDistance * math.sin(math.radians(deg ) ) ) )
 			pygame.draw.circle(screen, WHITE, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
 
-		for center in centers:
-			pygame.draw.circle(screen, GREY, center, 40, 0 )
+		for i in xrange(4):
+			pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
+			screen.blit(font1.render("+"+str(playerKilled[i]),True, GREEN), (centers[i][0] - 40, centers[i][1] - 20))
+			screen.blit(font1.render("/",True, WHITE), (centers[i][0], centers[i][1] - 20))
+			screen.blit(font1.render("-"+str(playerDied[i]),True, RED), (centers[i][0] + 5, centers[i][1] - 20))
+
 		# for wall in walls:
 		# 	pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
 		ftype = (ftype + 1) % 3
