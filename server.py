@@ -14,7 +14,7 @@ SERVER = (IP, PORT)
 
 lock = thread.allocate_lock()
 Players = {}
-colours = ['Green', 'Red', 'Blue', 'Yellow']
+colours = ['green', 'red', 'blue', 'yellow']
 colour_index = 0
 
 LEFT = [
