@@ -75,10 +75,6 @@ def playGame(numberOfPlayers):
 	playerCoordinate.append((width - 100, 100))
 	playerCoordinate.append((100,height - 100))
 
-	
-	# Orientation of each player
-	playerOrientation = [0 for i in xrange(4)]
-
 	# player cursors
 	playerCursor = []
 	newPlayerCursor = []
@@ -94,6 +90,14 @@ def playGame(numberOfPlayers):
 
 	playerCursor.append(pygame.image.load('yellow_triangle.png'))
 	newPlayerCursor.append(pygame.image.load('yellow_triangle.png'))
+
+	# Orientation of each player
+	playerOrientation = [0 for i in xrange(4)]
+	playerOrientation[1] = 180
+	newPlayerCursor[1] = pygame.transform.rotate(playerCursor[1], playerOrientation[1])
+
+	playerOrientation[2] = 180
+	newPlayerCursor[2] = pygame.transform.rotate(playerCursor[2], playerOrientation[2])
 
 	# flames images
 	flames = []
