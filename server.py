@@ -38,17 +38,17 @@ SHOOT = [
         pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
         ]
 
-def accept_connections():
+def accept_connections(q):
     sock = socket(AF_INET, SOCK_STREAM)
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     sock.bind(SERVER)
     sock.listen(100)
     print 'Listening on port', PORT
     while True:
-        client = sock.accept()
-        thread.start_new_thread(player_communication, client)
+        s, a = sock.accept()
+        thread.start_new_thread(player_communication, (s, a, q))
 
-def player_communication(sock, addr):
+def player_communication(sock, addr, q):
     global colour_index
     print 'Client connected from', addr
     while True:
@@ -64,6 +64,7 @@ def player_communication(sock, addr):
                         colour_index += 1
                         sock.send('Connected\n')
                         sock.send(colours[Players[sock]] + '\n')
+                        q.put('connect')
                     else:
                         sock.send('ERROR\n')
                         print 'Too many players'
@@ -77,6 +78,8 @@ def player_communication(sock, addr):
             if 'Shoot' in msg:
                 pygame.event.post(SHOOT[Players[sock]])
                 print 'Shoot detected from Player', str(Players[sock] + 1)
+            if 'Ready' in msg:
+                q.put('Ready')
             if len(msg) > 0:
                 print 'Received', msg, 'from', addr
             else:

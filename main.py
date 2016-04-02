@@ -4,6 +4,7 @@ import math
 from copy import deepcopy
 import server
 import thread
+from Queue import Queue
 
 class Bullet:
 
@@ -218,6 +219,8 @@ def playGame(numberOfPlayers):
 	ftype = 0
 	etype = 0
 
+	rotationOffset = 10
+
 	# r = pygame.draw.rect(screen, BROWN, [200, 200, 20 , 10] )
 
 	while isRunning:
@@ -226,28 +229,28 @@ def playGame(numberOfPlayers):
 				sys.exit(0)
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_a:
-					playerOrientation[0] = ( (playerOrientation[0] + 5) + 360 ) % 360
+					playerOrientation[0] = ( (playerOrientation[0] + rotationOffset) + 360 ) % 360
 					newPlayerCursor[0] = pygame.transform.rotate(playerCursor[0], playerOrientation[0])
 				elif event.key == pygame.K_s:
-					playerOrientation[0] = ( (playerOrientation[0] - 5) + 360 ) % 360
+					playerOrientation[0] = ( (playerOrientation[0] - rotationOffset) + 360 ) % 360
 					newPlayerCursor[0] = pygame.transform.rotate(playerCursor[0], playerOrientation[0])
 				elif event.key == pygame.K_d:
-					playerOrientation[1] = ( (playerOrientation[1] + 5) + 360 ) % 360
+					playerOrientation[1] = ( (playerOrientation[1] + rotationOffset) + 360 ) % 360
 					newPlayerCursor[1] = pygame.transform.rotate(playerCursor[1], playerOrientation[1])
 				elif event.key == pygame.K_f:
-					playerOrientation[1] = ( (playerOrientation[1] - 5) + 360 ) % 360
+					playerOrientation[1] = ( (playerOrientation[1] - rotationOffset) + 360 ) % 360
 					newPlayerCursor[1] = pygame.transform.rotate(playerCursor[1], playerOrientation[1])
 				elif event.key == pygame.K_g:
-					playerOrientation[2] = ( (playerOrientation[2] + 5) + 360 ) % 360
+					playerOrientation[2] = ( (playerOrientation[2] + rotationOffset) + 360 ) % 360
 					newPlayerCursor[2] = pygame.transform.rotate(playerCursor[2], playerOrientation[2])
 				elif event.key == pygame.K_h:
-					playerOrientation[2] = ( (playerOrientation[2] - 5) + 360 ) % 360
+					playerOrientation[2] = ( (playerOrientation[2] - rotationOffset) + 360 ) % 360
 					newPlayerCursor[2] = pygame.transform.rotate(playerCursor[2], playerOrientation[2])
 				elif event.key == pygame.K_j:
-					playerOrientation[3] = ( (playerOrientation[3] + 5) + 360 ) % 360
+					playerOrientation[3] = ( (playerOrientation[3] + rotationOffset) + 360 ) % 360
 					newPlayerCursor[3] = pygame.transform.rotate(playerCursor[3], playerOrientation[3])
 				elif event.key == pygame.K_k:
-					playerOrientation[3] = ( (playerOrientation[3] - 5) + 360 ) % 360
+					playerOrientation[3] = ( (playerOrientation[3] - rotationOffset) + 360 ) % 360
 					newPlayerCursor[3] = pygame.transform.rotate(playerCursor[3], playerOrientation[3])
 				elif event.key == pygame.K_z:
 					temp = Bullet()
@@ -286,6 +289,24 @@ def playGame(numberOfPlayers):
 					temp.coordinate = (temp.coordinate[0] +  (x * 30 * math.cos(math.radians(deg ) ) ) , temp.coordinate[1] + (y * 30 * math.sin(math.radians(deg ) ) ) )
 					bullets.append(temp)
 		
+		for i in xrange(4):
+			if playerIsAlive[i] == 0:
+				playerLife[i] = 100
+				if i == 1 or i == 2:
+					playerOrientation[i] = 180
+				else:
+					playerOrientation[i] = 0
+				newPlayerCursor[i] = pygame.transform.rotate(playerCursor[i], playerOrientation[i])
+				playerIsAlive[i] = 1
+				if i == 0:
+					playerCoordinate[i] = (100, 100)
+				elif i == 1:
+					playerCoordinate[i] = (width - 100, height - 100)
+				elif i == 2:
+					playerCoordinate[i] = (width - 100, 100)
+				else:
+					playerCoordinate[i] = (100, width - 100)
+
 		# print len(bullets)
 
 		bulletIsAlive = [1 for i in xrange(len(bullets))]
@@ -366,6 +387,8 @@ def playGame(numberOfPlayers):
 					playerIsAlive[j] = 0
 					print "Hit"
 
+
+
 		screen.fill(BLACK)
 
 		for i in xrange(numberOfPlayers):
@@ -406,5 +429,19 @@ def main():
 	playGame(3)
 
 if __name__ == "__main__":
-        thread.start_new_thread(server.accept_connections, ())
+        q = Queue()
+        thread.start_new_thread(server.accept_connections, (q,))
+        connections = 0
+        ready = 0
+        flag = 0
+        while True:
+            if connections == ready and flag == 1:
+                break
+            msg = q.get()
+            if msg == 'connect':
+                connections += 1
+            elif msg == 'Ready':
+                ready += 1
+            flag = 1
+
         main()
