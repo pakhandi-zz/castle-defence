@@ -94,12 +94,85 @@ def playGame(numberOfPlayers):
 
 	playerCursor.append(pygame.image.load('yellow_triangle.png'))
 	newPlayerCursor.append(pygame.image.load('yellow_triangle.png'))
+
+	# flames images
+	flames = []
+
+	flames.append(pygame.image.load('flames0.png'))
+	flames.append(pygame.image.load('flames1.png'))
+	flames.append(pygame.image.load('flames2.png'))
+
+	# flames coordinate
+
+	flamesCoordinate = []
+
+	i = 0
+	while True:
+		if i > width + 20:
+			break
+		flamesCoordinate.append((i,0))
+		flamesCoordinate.append((i,height - 20))
+		i = i + 20
+
+	i = 0
+	while True:
+		if i > height + 20:
+			break;
+		flamesCoordinate.append((0,i))
+		flamesCoordinate.append((width - 20, i))
+		i = i + 20
+
+	# electric images
+	electrics = []
+	electricsHorizontol = []
+
+	electrics.append(pygame.image.load('electric0.png'))
+	electrics.append(pygame.image.load('electric1.png'))
+
+	electricsHorizontol.append(pygame.transform.rotate(electrics[0], 90))
+	electricsHorizontol.append(pygame.transform.rotate(electrics[1], 90))
+
+	# electrics coordinate
+	electricsCoordinates = []
+	electricsHorizontolCoordinates = []
+
+	i = 0
+	while True:
+		if i >= 200:
+			break
+		electricsCoordinates.append((width / 2, i))
+		i = i + 40
+
+	i = height - 200
+	while True:
+		if i >= height:
+			break
+		electricsCoordinates.append((width / 2, i))
+		i = i + 40
+
+	i = 0
+	while True:
+		if i >= 300:
+			break
+		electricsHorizontolCoordinates.append((i, height / 2))
+		i = i + 40
+
+	i = width - 300
+	while True:
+		if i >= width:
+			break
+		electricsHorizontolCoordinates.append((i, height / 2))
+		i = i + 40
+
+
+	# life of each player
+	playerLife = [100 for i in xrange(4)]
 	
 	for center in centers:
 		pygame.draw.circle(screen, GREY, center, 40, 0 )
 	
-	for wall in walls:
-		pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
+	# for wall in walls:
+	# 	pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
 
 	pygame.display.flip()
 
@@ -109,6 +182,8 @@ def playGame(numberOfPlayers):
 	bulletDistance = 0.8
 
 	unitDistance = 0.3
+	ftype = 0
+	etype = 0
 
 	# r = pygame.draw.rect(screen, BROWN, [200, 200, 20 , 10] )
 
@@ -186,22 +261,26 @@ def playGame(numberOfPlayers):
 			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
 			deg, x, y = getDirection(bullets[i].orientation)
 			bullets[i].coordinate = (bullets[i].coordinate[0] +  (x * bulletDistance * math.cos(math.radians(deg ) ) ) , bullets[i].coordinate[1] + (y * bulletDistance * math.sin(math.radians(deg ) ) ) )
-			# b.coordinate = (int(b.coordinate[0]) , int(b.coordinate[1]));
-			# print bullets[i].coordinate
 			pygame.draw.circle(screen, WHITE, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
 
 		for i in xrange(numberOfPlayers):
-			# print i
 			deg, x, y = getDirection(playerOrientation[i])
-
 			playerCenter[i] = newPlayerCursor[i].get_rect().center
 			playerCenter[i] = (playerCenter[i][0] + playerCoordinate[i][0] , playerCenter[i][1] + playerCoordinate[i][1])
 			playerCoordinate[i] = (playerCoordinate[i][0] +  (x * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y * unitDistance * math.sin(math.radians(deg ) ) ) )
 			screen.blit(newPlayerCursor[i], playerCoordinate[i] )
 		for center in centers:
 			pygame.draw.circle(screen, GREY, center, 40, 0 )
-		for wall in walls:
-			pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
+		# for wall in walls:
+		# 	pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
+		ftype = (ftype + 1) % 3
+		for point in flamesCoordinate:
+			screen.blit( flames[ftype] , point)
+		etype = (etype + 1) % 2
+		for point in electricsCoordinates:
+			screen.blit( electrics[etype] , point)
+		for point in electricsHorizontolCoordinates:
+			screen.blit( electricsHorizontol[etype] , point)
 		pygame.display.update()
 		clock.tick(80)
 
