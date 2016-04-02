@@ -2,6 +2,8 @@ import pygame
 import sys
 import math
 from copy import deepcopy
+import server
+import thread
 
 class Bullet:
 
@@ -292,4 +294,5 @@ def main():
 	playGame(4)
 
 if __name__ == "__main__":
-	main()
+        thread.start_new_thread(server.accept_connections, ())
+        main()

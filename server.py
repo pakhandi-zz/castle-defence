@@ -69,13 +69,13 @@ def player_communication(sock, addr):
                         print 'Too many players'
                 print 'sent to app'
             if 'Right' in msg:
-#                pygame.event.post(RIGHT[Players[sock]])
+                pygame.event.post(RIGHT[Players[sock]])
                 print 'Right detected from Player', str(Players[sock] + 1)
             if 'Left' in msg:
-#                pygame.event.post(LEFT[Players[sock]])
+                pygame.event.post(LEFT[Players[sock]])
                 print 'Left detected from Player', str(Players[sock] + 1)
             if 'Shoot' in msg:
-#                pygame.event.post(SHOOT[Players[sock]])
+                pygame.event.post(SHOOT[Players[sock]])
                 print 'Shoot detected from Player', str(Players[sock] + 1)
             if len(msg) > 0:
                 print 'Received', msg, 'from', addr
