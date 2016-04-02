@@ -263,6 +263,15 @@ def playGame(numberOfPlayers):
 
 		# print len(bullets)
 
+		for i in xrange(width):
+			point = (i, 20)
+			for j in xrange(numberOfPlayers):
+				rect = newPlayerCursor[j].get_rect()
+				rect.center = playerCoordinate[j]
+				if rect.collidepoint(point):
+					print "Hit"
+
+
 		for i in xrange(len(bullets)):
 			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
 			deg, x, y = getDirection(bullets[i].orientation)
