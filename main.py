@@ -137,6 +137,9 @@ def playGame(numberOfPlayers):
 	playerLifeBar[2] = pygame.Rect(width - 230, 40, 100, 5)
 	playerLifeBar[3] = pygame.Rect(100, height - 50, 100, 5)
 
+	# player reverse
+	playerReverse = [1 for i in xrange(4)]
+
 
 	# points
 	playerDied = [0 for i in xrange(4)]
@@ -316,6 +319,26 @@ def playGame(numberOfPlayers):
 					deg, x, y = getDirection(temp.orientation)
 					temp.coordinate = (temp.coordinate[0] +  (x * 30 * math.cos(math.radians(deg ) ) ) , temp.coordinate[1] + (y * 30 * math.sin(math.radians(deg ) ) ) )
 					bullets.append(temp)
+				elif event.key == pygame.K_w:
+					if playerReverse[0] == 1:
+						playerReverse[0] = -1
+					else:
+						playerReverse[0] = 1
+				elif event.key == pygame.K_r:
+					if playerReverse[1] == 1:
+						playerReverse[1] = -1
+					else:
+						playerReverse[1] = 1
+				elif event.key == pygame.K_y:
+					if playerReverse[2] == 1:
+						playerReverse[2] = -1
+					else:
+						playerReverse[2] = 1
+				elif event.key == pygame.K_i:
+					if playerReverse[3] == 1:
+						playerReverse[3] = -1
+					else:
+						playerReverse[3] = 1
 		
 		for i in xrange(4):
 			if playerIsAlive[i] == 0:
@@ -358,7 +381,7 @@ def playGame(numberOfPlayers):
 			deg, x, y = getDirection(playerOrientation[i])
 			playerCenter[i] = newPlayerCursor[i].get_rect().center
 			playerCenter[i] = (playerCenter[i][0] + playerCoordinate[i][0] , playerCenter[i][1] + playerCoordinate[i][1])
-			playerCoordinate[i] = (playerCoordinate[i][0] +  (x * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y * unitDistance * math.sin(math.radians(deg ) ) ) )
+			playerCoordinate[i] = (playerCoordinate[i][0] +  (x * playerReverse[i] * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y *  playerReverse[i] * unitDistance * math.sin(math.radians(deg ) ) ) )
 			screen.blit(newPlayerCursor[i], playerCoordinate[i] )
 
 		for j in xrange(numberOfPlayers):
@@ -572,5 +595,6 @@ if __name__ == "__main__":
             elif msg == 'Ready':
                 ready += 1
             flag = 1
+        # ready = 4
         playGame(ready)
 
