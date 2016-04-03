@@ -116,6 +116,8 @@ def playGame(numberOfPlayers):
 	playerCursor.append(pygame.image.load('yellow_tank.png'))
 	newPlayerCursor.append(pygame.image.load('yellow_tank.png'))
 
+        bgImage = pygame.image.load('terrain.jpg')
+
 	# Orientation of each player
 	playerOrientation = [0 for i in xrange(4)]
 	playerOrientation[1] = 180
@@ -486,13 +488,17 @@ def playGame(numberOfPlayers):
 					playerDied[j] = playerDied[j] + 1
 
 		screen.fill(BLACK)
+                i = 0
+                while i <= 1200:
+                    j = 0
+                    while j <= 700:
+                        screen.blit(bgImage, (i, j))
+                        j += 200
+                    i += 200
+
 
 		for i in xrange(numberOfPlayers):
-			if playerIsAlive[i] == 1:
-				screen.blit(newPlayerCursor[i], playerCoordinate[i] )
-
-		for i in xrange(numberOfPlayers):
-			pygame.draw.rect(screen, WHITE, playerLifeBar[i])
+			pygame.draw.rect(screen, BLACK, playerLifeBar[i])
 
 		for i in xrange(numberOfPlayers):
 			if playerIsAlive[i] == 1:
@@ -504,7 +510,7 @@ def playGame(numberOfPlayers):
 			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
 			deg, x, y = getDirection(bullets[i].orientation)
 			bullets[i].coordinate = (bullets[i].coordinate[0] +  (x * bulletDistance * math.cos(math.radians(deg ) ) ) , bullets[i].coordinate[1] + (y * bulletDistance * math.sin(math.radians(deg ) ) ) )
-			pygame.draw.circle(screen, WHITE, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
+			pygame.draw.circle(screen, BLACK, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
 
 		for i in xrange(4):
 			pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
@@ -523,6 +529,10 @@ def playGame(numberOfPlayers):
 		for point in electricsHorizontolCoordinates:
 			screen.blit( electricsHorizontol[etype] , point)
 		pygame.draw.rect( screen, BLUE, [100, 5, TOTAL_TIME / 100, 5] )
+		for i in xrange(numberOfPlayers):
+			if playerIsAlive[i] == 1:
+				screen.blit(newPlayerCursor[i], playerCoordinate[i] )
+
 		pygame.display.update()
 		clock.tick(80)
 	screen.fill(BLACK)
