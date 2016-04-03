@@ -116,7 +116,7 @@ def playGame(numberOfPlayers):
 	playerCursor.append(pygame.image.load('yellow_tank.png'))
 	newPlayerCursor.append(pygame.image.load('yellow_tank.png'))
 
-        bgImage = pygame.image.load('terrain.jpg')
+	bgImage = pygame.image.load('terrain.jpg')
 
 	# Orientation of each player
 	playerOrientation = [0 for i in xrange(4)]
@@ -141,6 +141,16 @@ def playGame(numberOfPlayers):
 
 	# player reverse
 	playerReverse = [1 for i in xrange(4)]
+
+	# player boost
+	playerBoost = [50 for i in range(4)]
+
+	# player boost bar
+	playerBoostBar = [pygame.rect for i in xrange(4)]
+	playerBoostBar[0] = pygame.Rect(100, 50, 100, 5)
+	playerBoostBar[1] = pygame.Rect(width - 230, height - 40, 100, 5)
+	playerBoostBar[2] = pygame.Rect(width - 230, 50, 100, 5)
+	playerBoostBar[3] = pygame.Rect(100, height - 40, 100, 5)
 
 
 	# points
@@ -226,8 +236,7 @@ def playGame(numberOfPlayers):
 	electricsRectangle[2] = pygame.Rect(0, height / 2, 300, 20)
 	electricsRectangle[3] = pygame.Rect(width - 300, height / 2, 300, 20)
 
-	# life of each player
-	playerLife = [100 for i in xrange(4)]
+	
 	
 	for center in centers:
 		pygame.draw.circle(screen, GREY, center, 40, 0 )
@@ -256,6 +265,7 @@ def playGame(numberOfPlayers):
 		TOTAL_TIME -= 1
 		if TOTAL_TIME <= 0:
 			break;
+		thisBoost = [0 for i in xrange(4)]
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				TOTAL_TIME = 0
@@ -341,6 +351,27 @@ def playGame(numberOfPlayers):
 						playerReverse[3] = -1
 					else:
 						playerReverse[3] = 1
+				elif event.key == pygame.K_e:
+					i = 0
+					if playerBoost[i] > 0:
+						thisBoost[i] = 1
+						playerBoost[i] -= 1
+				elif event.key == pygame.K_t:
+					i = 1
+					if playerBoost[i] > 0:
+						thisBoost[i] = 1
+						playerBoost[i] -= 1
+				elif event.key == pygame.K_u:
+					i = 2
+					if playerBoost[i] > 0:
+						thisBoost[i] = 1
+						playerBoost[i] -= 1
+				elif event.key == pygame.K_o:
+					i = 3
+					if playerBoost[i] > 0:
+						thisBoost[i] = 1
+						playerBoost[i] -= 1
+	
 		
 		for i in xrange(4):
 			if playerIsAlive[i] == 0:
@@ -350,7 +381,9 @@ def playGame(numberOfPlayers):
 				else:
 					playerOrientation[i] = 0
 				newPlayerCursor[i] = pygame.transform.rotate(playerCursor[i], playerOrientation[i])
+				playerReverse[i] = 1
 				playerIsAlive[i] = 1
+				playerBoost[i] = 50
 				if i == 0:
 					playerCoordinate[i] = (100, 100)
 				elif i == 1:
@@ -383,8 +416,11 @@ def playGame(numberOfPlayers):
 			deg, x, y = getDirection(playerOrientation[i])
 			playerCenter[i] = newPlayerCursor[i].get_rect().center
 			playerCenter[i] = (playerCenter[i][0] + playerCoordinate[i][0] , playerCenter[i][1] + playerCoordinate[i][1])
-			playerCoordinate[i] = (playerCoordinate[i][0] +  (x * playerReverse[i] * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y *  playerReverse[i] * unitDistance * math.sin(math.radians(deg ) ) ) )
-			screen.blit(newPlayerCursor[i], playerCoordinate[i] )
+			if thisBoost[i] == 1:
+				playerCoordinate[i] = (playerCoordinate[i][0] +  (x * playerReverse[i] * 10 * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y *  playerReverse[i] * 10 * unitDistance * math.sin(math.radians(deg ) ) ) )
+			else:
+				playerCoordinate[i] = (playerCoordinate[i][0] +  (x * playerReverse[i] * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y *  playerReverse[i] * unitDistance * math.sin(math.radians(deg ) ) ) )
+			# screen.blit(newPlayerCursor[i], playerCoordinate[i] )
 
 		for j in xrange(numberOfPlayers):
 			rect = newPlayerCursor[j].get_rect()
@@ -488,14 +524,23 @@ def playGame(numberOfPlayers):
 					playerDied[j] = playerDied[j] + 1
 
 		screen.fill(BLACK)
-                i = 0
-                while i <= 1200:
-                    j = 0
-                    while j <= 700:
-                        screen.blit(bgImage, (i, j))
-                        j += 200
-                    i += 200
+		i = 0
+		while i <= 1200:
+			j = 0
+			while j <= 700:
+				screen.blit(bgImage, (i, j))
+				j += 200
+			i += 200
 
+		 
+		for i in xrange(numberOfPlayers):
+			pygame.draw.rect(screen, BLACK, playerBoostBar[i])
+
+		for i in xrange(numberOfPlayers):
+			if playerIsAlive[i] == 1:
+				rect = deepcopy(playerBoostBar[i])
+				rect.width = playerBoost[i] * 2
+				pygame.draw.rect(screen, BLUE, rect)
 
 		for i in xrange(numberOfPlayers):
 			pygame.draw.rect(screen, BLACK, playerLifeBar[i])
@@ -580,7 +625,7 @@ def playGame(numberOfPlayers):
 
 	pygame.display.update()
 
-	
+
 	while isRunning:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -589,50 +634,56 @@ def playGame(numberOfPlayers):
 
 
 if __name__ == "__main__":
-        ip = ''
-        port = 12345
-        max_players = 4
-        q = Queue()
-        UP = None
-        DOWN = None
-        LEFT = [
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_d),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_g),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_j)
-                ]
-        RIGHT = [
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_f),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_h),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_k)
-                ]
-        A = [
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_b),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
-                ]
-        B = [
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
-                pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
-                ]
+		ip = ''
+		port = 12345
+		max_players = 4
+		q = Queue()
+		# UP = None
+		DOWN = None
+		UP = [
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_e),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_u),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_o)
+				]
+		LEFT = [
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_d),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_g),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_j)
+				]
+		RIGHT = [
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_f),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_h),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_k)
+				]
+		A = [
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_b),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
+				]
+		B = [
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
+				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
+				]
 
-        thread.start_new_thread(Server.accept_connections, (ip, port, q, max_players, UP, DOWN, LEFT, RIGHT, A, B))
-        connections = 0
-        ready = 0
-        flag = 0
-        while True:
-            if connections == ready and flag == 1:
-                break
-            msg = q.get()
-            if msg == 'connect':
-                connections += 1
-            elif msg == 'Ready':
-                ready += 1
-            flag = 1
+		thread.start_new_thread(Server.accept_connections, (ip, port, q, max_players, UP, DOWN, LEFT, RIGHT, A, B))
+		connections = 0
+		ready = 0
+		flag = 0
+		while True:
+			if connections == ready and flag == 1:
+				break
+			msg = q.get()
+			if msg == 'connect':
+				connections += 1
+			elif msg == 'Ready':
+				ready += 1
+			flag = 1
 
-        playGame(ready)
+		playGame(ready)
 
