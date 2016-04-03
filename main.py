@@ -506,12 +506,6 @@ def playGame(numberOfPlayers):
 				rect.width = playerLife[i]
 				pygame.draw.rect(screen, GREEN, rect)
 
-		for i in xrange(len(bullets)):
-			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
-			deg, x, y = getDirection(bullets[i].orientation)
-			bullets[i].coordinate = (bullets[i].coordinate[0] +  (x * bulletDistance * math.cos(math.radians(deg ) ) ) , bullets[i].coordinate[1] + (y * bulletDistance * math.sin(math.radians(deg ) ) ) )
-			pygame.draw.circle(screen, BLACK, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
-
 		for i in xrange(4):
 			pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
 			screen.blit(font1.render("+"+str(playerKilled[i]),True, GREEN), (centers[i][0] - 40, centers[i][1] - 20))
@@ -524,11 +518,18 @@ def playGame(numberOfPlayers):
 		for point in flamesCoordinate:
 			screen.blit( flames[ftype] , point)
 		etype = (etype + 1) % 2
+		for i in xrange(len(bullets)):
+			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
+			deg, x, y = getDirection(bullets[i].orientation)
+			bullets[i].coordinate = (bullets[i].coordinate[0] +  (x * bulletDistance * math.cos(math.radians(deg ) ) ) , bullets[i].coordinate[1] + (y * bulletDistance * math.sin(math.radians(deg ) ) ) )
+			pygame.draw.circle(screen, BLACK, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
+
 		for point in electricsCoordinates:
 			screen.blit( electrics[etype] , point)
 		for point in electricsHorizontolCoordinates:
 			screen.blit( electricsHorizontol[etype] , point)
 		pygame.draw.rect( screen, BLUE, [100, 5, TOTAL_TIME / 100, 5] )
+
 		for i in xrange(numberOfPlayers):
 			if playerIsAlive[i] == 1:
 				screen.blit(newPlayerCursor[i], playerCoordinate[i] )
@@ -547,9 +548,6 @@ def playGame(numberOfPlayers):
 	color = [GREEN, RED, BLUE, YELLOW]
 	toPrint = [(400, 220), (400, 340), (400, 460), (400, 580)]
 
-	playerKilled
-	playerDied
-	numberOfPlayers
 	total_score = []
 	for i in xrange(numberOfPlayers):
 		total_score.append((i, playerKilled[i] - playerDied[i]))
