@@ -39,6 +39,8 @@ def getDirection(orientation):
 	return deg, x, y
 
 BULLET_DAMAGE = 10
+# 10 ** 18
+
 
 width = 1200
 height = 700
@@ -49,14 +51,19 @@ GREY = (200,200,200)
 WHITE = (255,255,255)
 GREEN = (0, 155, 0)
 RED = (255,0,0)
+BLUE = (0,0,255)
+YELLOW = (255,255,0)
 
 
 
 def playGame(numberOfPlayers):
+	TOTAL_TIME = 100000
 	screen = pygame.display.set_mode((width, height))
 	pygame.display.set_caption("Castle Defence")
 
 	font1 = pygame.font.SysFont('Arial', 20)
+
+	font2 = pygame.font.SysFont('Arial', 40)
 
 	screen.fill(BLACK)
 
@@ -241,8 +248,12 @@ def playGame(numberOfPlayers):
 	# r = pygame.draw.rect(screen, BROWN, [200, 200, 20 , 10] )
 
 	while isRunning:
+		TOTAL_TIME -= 1
+		if TOTAL_TIME <= 0:
+			break;
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				TOTAL_TIME = 0
 				sys.exit(0)
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_a:
@@ -436,9 +447,6 @@ def playGame(numberOfPlayers):
 				bullets.pop(i - removed)
 				removed = removed + 1
 
-
-
-
 		# Collision of tanks
 		for i in xrange(numberOfPlayers):
 			for j in xrange(numberOfPlayers):
@@ -491,8 +499,62 @@ def playGame(numberOfPlayers):
 			screen.blit( electrics[etype] , point)
 		for point in electricsHorizontolCoordinates:
 			screen.blit( electricsHorizontol[etype] , point)
+		pygame.draw.rect( screen, BLUE, [100, 5, TOTAL_TIME / 100, 5] )
 		pygame.display.update()
 		clock.tick(80)
+	screen.fill(BLACK)
+	pygame.display.update()
+	screen.blit(font2.render("RANK",True, WHITE), (150, 100))
+	screen.blit(font2.render("PLAYER",True, WHITE), (320, 100))
+	screen.blit(font2.render("KILLS",True, WHITE), (550, 100))
+	screen.blit(font2.render("DEATHS",True, WHITE), (720, 100))
+	screen.blit(font2.render("TOTAL",True, WHITE), (930, 100))
+
+
+	color = [GREEN, RED, BLUE, YELLOW]
+	toPrint = [(400, 220), (400, 340), (400, 460), (400, 580)]
+
+	playerKilled
+	playerDied
+	numberOfPlayers
+	total_score = []
+	for i in xrange(numberOfPlayers):
+		total_score.append((i, playerKilled[i] - playerDied[i]))
+	total_score.sort(reverse=True, key=lambda a: a[1])
+
+	for i in xrange(numberOfPlayers):
+		val = total_score[i][0]
+		pygame.draw.circle(screen, color[val], toPrint[i], 50, 0)
+
+	toPrint = [(200, 200), (200, 320), (200, 440), (200, 560)]
+	for i in xrange(numberOfPlayers):
+		screen.blit(font2.render(str(i + 1),True, WHITE), toPrint[i])
+
+
+
+	toPrint = [(550, 200), (550, 320), (550, 440), (550, 560)]
+	for i in xrange(numberOfPlayers):
+		val = total_score[i][0]
+		screen.blit(font2.render(str(playerKilled[val]),True, WHITE), toPrint[i])
+
+	toPrint = [(750, 200), (750, 320), (750, 440), (750, 560)]
+	for i in xrange(numberOfPlayers):
+		val = total_score[i][0]
+		screen.blit(font2.render(str(playerDied[val]),True, WHITE), toPrint[i])
+
+	toPrint = [(950, 200), (950, 320), (950, 440), (950, 560)]
+	for i in xrange(numberOfPlayers):
+		val = total_score[i][0]
+		screen.blit(font2.render(str(total_score[i][1]),True, WHITE), toPrint[i])
+
+	pygame.display.update()
+
+	
+	while isRunning:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				sys.exit(0)
+		pass
 
 
 if __name__ == "__main__":
