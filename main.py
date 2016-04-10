@@ -57,7 +57,7 @@ YELLOW = (255,255,0)
 
 
 def playGame(numberOfPlayers):
-	TOTAL_TIME = 100000
+	TOTAL_TIME = 100000 / 5
 	screen = pygame.display.set_mode((width, height))
 	pygame.display.set_caption("Castle Defence")
 
@@ -104,19 +104,19 @@ def playGame(numberOfPlayers):
 	playerCursor = []
 	newPlayerCursor = []
 
-	playerCursor.append(pygame.image.load('green_tank.png'))
-	newPlayerCursor.append(pygame.image.load('green_tank.png'))
+	playerCursor.append(pygame.image.load('images/green_tank.png'))
+	newPlayerCursor.append(pygame.image.load('images/green_tank.png'))
 
-	playerCursor.append(pygame.image.load('red_tank.png'))
-	newPlayerCursor.append(pygame.image.load('red_tank.png'))
+	playerCursor.append(pygame.image.load('images/red_tank.png'))
+	newPlayerCursor.append(pygame.image.load('images/red_tank.png'))
 
-	playerCursor.append(pygame.image.load('blue_tank.png'))
-	newPlayerCursor.append(pygame.image.load('blue_tank.png'))
+	playerCursor.append(pygame.image.load('images/blue_tank.png'))
+	newPlayerCursor.append(pygame.image.load('images/blue_tank.png'))
 
-	playerCursor.append(pygame.image.load('yellow_tank.png'))
-	newPlayerCursor.append(pygame.image.load('yellow_tank.png'))
+	playerCursor.append(pygame.image.load('images/yellow_tank.png'))
+	newPlayerCursor.append(pygame.image.load('images/yellow_tank.png'))
 
-	bgImage = pygame.image.load('terrain.jpg')
+	bgImage = pygame.image.load('images/terrain.jpg')
 
 	# Orientation of each player
 	playerOrientation = [0 for i in xrange(4)]
@@ -163,9 +163,9 @@ def playGame(numberOfPlayers):
 	# flames images
 	flames = []
 
-	flames.append(pygame.image.load('flames0.png'))
-	flames.append(pygame.image.load('flames1.png'))
-	flames.append(pygame.image.load('flames2.png'))
+	flames.append(pygame.image.load('images/flames0.png'))
+	flames.append(pygame.image.load('images/flames1.png'))
+	flames.append(pygame.image.load('images/flames2.png'))
 
 	# flames coordinate
 
@@ -191,8 +191,8 @@ def playGame(numberOfPlayers):
 	electrics = []
 	electricsHorizontol = []
 
-	electrics.append(pygame.image.load('electric0.png'))
-	electrics.append(pygame.image.load('electric1.png'))
+	electrics.append(pygame.image.load('images/electric0.png'))
+	electrics.append(pygame.image.load('images/electric1.png'))
 
 	electricsHorizontol.append(pygame.transform.rotate(electrics[0], 90))
 	electricsHorizontol.append(pygame.transform.rotate(electrics[1], 90))
@@ -634,56 +634,56 @@ def playGame(numberOfPlayers):
 
 
 if __name__ == "__main__":
-		ip = ''
-		port = 12345
-		max_players = 4
-		q = Queue()
-		# UP = None
-		DOWN = None
-		UP = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_e),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_u),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_o)
-				]
-		LEFT = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_d),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_g),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_j)
-				]
-		RIGHT = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_f),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_h),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_k)
-				]
-		A = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_b),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
-				]
-		B = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
-				]
+		# ip = ''
+		# port = 12345
+		# max_players = 4
+		# q = Queue()
+		# # UP = None
+		# DOWN = None
+		# UP = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_e),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_u),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_o)
+		# 		]
+		# LEFT = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_d),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_g),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_j)
+		# 		]
+		# RIGHT = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_f),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_h),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_k)
+		# 		]
+		# A = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_b),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
+		# 		]
+		# B = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
+		# 		]
 
-		thread.start_new_thread(Server.accept_connections, (ip, port, q, max_players, UP, DOWN, LEFT, RIGHT, A, B))
-		connections = 0
-		ready = 0
-		flag = 0
-		while True:
-			if connections == ready and flag == 1:
-				break
-			msg = q.get()
-			if msg == 'connect':
-				connections += 1
-			elif msg == 'Ready':
-				ready += 1
-			flag = 1
-
+		# thread.start_new_thread(Server.accept_connections, (ip, port, q, max_players, UP, DOWN, LEFT, RIGHT, A, B))
+		# connections = 0
+		# ready = 0
+		# flag = 0
+		# while True:
+		# 	if connections == ready and flag == 1:
+		# 		break
+		# 	msg = q.get()
+		# 	if msg == 'connect':
+		# 		connections += 1
+		# 	elif msg == 'Ready':
+		# 		ready += 1
+		# 	flag = 1
+		ready = 4
 		playGame(ready)
 
