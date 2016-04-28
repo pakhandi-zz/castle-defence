@@ -254,36 +254,28 @@ def playGame(numberOfPlayers):
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_a:
 					ind = 0
-					tanks[ind].orientation = ( (tanks[ind].orientation + rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_s:
 					ind = 0
-					tanks[ind].orientation = ( (tanks[ind].orientation - rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateClockwise(rotationOffset)
 				elif event.key == pygame.K_d:
 					ind = 1
-					tanks[ind].orientation = ( (tanks[ind].orientation + rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_f:
 					ind = 1
-					tanks[ind].orientation = ( (tanks[ind].orientation - rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateClockwise(rotationOffset)
 				elif event.key == pygame.K_g:
 					ind = 2
-					tanks[ind].orientation = ( (tanks[ind].orientation + rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_h:
 					ind = 2
-					tanks[ind].orientation = ( (tanks[ind].orientation - rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateClockwise(rotationOffset)
 				elif event.key == pygame.K_j:
 					ind = 3
-					tanks[ind].orientation = ( (tanks[ind].orientation + rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_k:
 					ind = 3
-					tanks[ind].orientation = ( (tanks[ind].orientation - rotationOffset) + 360 ) % 360
-					tanks[ind].mobileCursor = pygame.transform.rotate(tanks[ind].fixedCursor, tanks[ind].orientation)
+					tanks[ind].rotateClockwise(rotationOffset)
 				# elif event.key == pygame.K_z:
 				# 	temp = Bullet()
 				# 	temp.firedBy = 0

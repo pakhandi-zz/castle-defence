@@ -49,5 +49,16 @@ class tank:
 		self.mobileCursor =  pygame.transform.rotate(self.fixedCursor, self.orientation)
 		self.rectangle = pygame.rect
 
+	def rotateAntiClockwise(self, offset):
+		self.orientation += offset + 360
+		self.orientation %= 360
+		self.updateMobileCursor()
 
+	def rotateClockwise(self, offset):
+		self.orientation -= offset + 360
+		self.orientation %= 360
+		self.updateMobileCursor()
+
+	def updateMobileCursor(self):
+		self.mobileCursor = pygame.transform.rotate(self.fixedCursor, self.orientation)
 	
