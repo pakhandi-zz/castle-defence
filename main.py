@@ -224,17 +224,6 @@ def playGame(numberOfPlayers):
 	for i in xrange(4):
 		tanks.append(tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
 
-	# while isRunning:
-	# 	for event in pygame.event.get():
-	# 		if event.type == pygame.QUIT:
-	# 			sys.exit(0)
-
-	# 	for i in xrange(numberOfPlayers):
-	# 		screen.blit(tanks[i].mobileCursor, tanks[i].coordinate )
-	# 	pygame.display.flip()
-
-	# r = pygame.draw.rect(screen, BROWN, [200, 200, 20 , 10] )
-
 	while isRunning:
 		TOTAL_TIME -= 1
 		if TOTAL_TIME <= 0:
@@ -343,16 +332,16 @@ def playGame(numberOfPlayers):
 
 		bulletIsAlive = [1 for i in xrange(len(bullets))]
 
-		# for i in xrange(len(bullets)):
-		# 	for j in xrange(numberOfPlayers):
-		# 		rect = playerRectangle[j]
-		# 		if rect.collidepoint(bullets[i].coordinate) and bulletIsAlive[i] == 1:
-		# 			playerLife[j] = playerLife[j] - BULLET_DAMAGE
-		# 			if playerLife[j] <= 0:
-		# 				playerDied[j] = playerDied[j] + 1
-		# 				playerKilled[bullets[i].firedBy] += 1
-		# 				playerIsAlive[j] = 0
-		# 			bulletIsAlive[i] = 0
+		for i in xrange(len(bullets)):
+			for j in xrange(numberOfPlayers):
+				rect = tanks[j].rectangle
+				if rect.collidepoint(bullets[i].coordinate) and bulletIsAlive[i] == 1:
+					tanks[j].life = tanks[j].life - BULLET_DAMAGE
+					if tanks[j].life <= 0:
+						playerDied[j] = playerDied[j] + 1
+						playerKilled[bullets[i].firedBy] += 1
+						playerIsAlive[j] = 0
+					bulletIsAlive[i] = 0
 
 		for i in xrange(numberOfPlayers):
 
@@ -362,14 +351,14 @@ def playGame(numberOfPlayers):
 			tanks[i].updateCenter()
 			tanks[i].updateCoordinate(thisBoost[i])
 
-		# for j in xrange(numberOfPlayers):
-		# 	rect = newPlayerCursor[j].get_rect()
-		# 	rect.center = playerCenter[j]
-		# 	if ( playerOrientation[j] > 15 and playerOrientation[j] < 75) or ( playerOrientation[j] > 105 and playerOrientation[j] < 165 ) or (playerOrientation[j] > 195 and playerOrientation[j] < 235) or ( playerOrientation[j] > 285 and playerOrientation[j] < 345 ):
-		# 		rect = rect.inflate(-20,-20)
-		# 	elif playerOrientation[j] % 90 != 0:
-		# 		rect = rect.inflate(-10,-10)
-		# 	playerRectangle[j] = rect
+		for j in xrange(numberOfPlayers):
+			rect = tanks[j].mobileCursor.get_rect()
+			rect.center = tanks[j].center
+			if ( tanks[j].orientation > 15 and tanks[j].orientation < 75) or ( tanks[j].orientation > 105 and tanks[j].orientation < 165 ) or (tanks[j].orientation > 195 and tanks[j].orientation < 235) or ( tanks[j].orientation > 285 and tanks[j].orientation < 345 ):
+				rect = rect.inflate(-20,-20)
+			elif tanks[j].orientation % 90 != 0:
+				rect = rect.inflate(-10,-10)
+			tanks[j].rectangle = rect
 
 		# collision with upper and lower flames
 		# for i in xrange(width):
@@ -482,14 +471,14 @@ def playGame(numberOfPlayers):
 		# 		rect.width = playerBoost[i] * 2
 		# 		pygame.draw.rect(screen, BLUE, rect)
 
-		# for i in xrange(numberOfPlayers):
-		# 	pygame.draw.rect(screen, BLACK, playerLifeBar[i])
+		for i in xrange(numberOfPlayers):
+			pygame.draw.rect(screen, BLACK, tanks[i].lifeBar)
 
-		# for i in xrange(numberOfPlayers):
-		# 	if playerIsAlive[i] == 1:
-		# 		rect = deepcopy(playerLifeBar[i])
-		# 		rect.width = playerLife[i]
-		# 		pygame.draw.rect(screen, GREEN, rect)
+		for i in xrange(numberOfPlayers):
+			if playerIsAlive[i] == 1:
+				rect = deepcopy(tanks[i].lifeBar)
+				rect.width = tanks[i].life
+				pygame.draw.rect(screen, GREEN, rect)
 
 		# for i in xrange(4):
 		# 	pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
