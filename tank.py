@@ -1,7 +1,29 @@
 import pygame
+import math
 
+unitDistance = 0.5
 
-class tank:
+def getDirection(orientation):
+	deg = orientation
+	x = +1
+	y = -1
+
+	if orientation > 90 and orientation <= 180:
+		deg = 180 - orientation
+		x = -1
+		y = -1
+	elif orientation > 180 and orientation<= 270:
+		deg = orientation - 180
+		x = -1
+		y = +1
+	elif orientation > 270 and orientation <= 360:
+		deg = 360 - orientation
+		x = +1
+		y = +1
+
+	return deg, x, y
+
+class Tank:
 	# position of the tank
 	coordinate = (0,0)
 
@@ -61,4 +83,24 @@ class tank:
 
 	def updateMobileCursor(self):
 		self.mobileCursor = pygame.transform.rotate(self.fixedCursor, self.orientation)
+
+	def updateCenter(self):
+		deg, x, y = getDirection(self.orientation)
+		self.center = self.mobileCursor.get_rect().center
+		self.center = (self.center[0] + self.coordinate[0], self.center[1] + self.coordinate[1])
+
+	def updateCoordinate(self, isBoost):
+		deg, x, y = getDirection(self.orientation)
+
+		boostVal = 1
+		if isBoost == 1:
+			boostVal = 10
+
+		self.coordinate = (self.coordinate[0] + (x * self.reverse * boostVal * unitDistance * math.cos( math.radians(deg) ) ) , self.coordinate[1] + (y * self.reverse * boostVal * unitDistance * math.sin( math.radians(deg) ) ) )
+
+	def toggleReverse(self):
+		if self.reverse == 1:
+			self.reverse = -1
+		else:
+			self.reverse = 1
 	
