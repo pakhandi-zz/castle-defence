@@ -263,15 +263,15 @@ def playGame(numberOfPlayers):
 					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
 					bullets.append(temp)
 				elif event.key == pygame.K_c:
-					ind = 0
+					ind = 1
 					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
 					bullets.append(temp)
 				elif event.key == pygame.K_b:
-					ind = 0
+					ind = 2
 					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
 					bullets.append(temp)
 				elif event.key == pygame.K_m:
-					ind = 0
+					ind = 3
 					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
 					bullets.append(temp)
 				elif event.key == pygame.K_w:
@@ -308,28 +308,31 @@ def playGame(numberOfPlayers):
 						tanks[ind].boost -= 1
 	
 		
-		# for i in xrange(4):
-		# 	if playerIsAlive[i] == 0:
-		# 		playerLife[i] = 100
-		# 		if i == 1 or i == 2:
-		# 			playerOrientation[i] = 180
-		# 		else:
-		# 			playerOrientation[i] = 0
-		# 		newPlayerCursor[i] = pygame.transform.rotate(playerCursor[i], playerOrientation[i])
-		# 		playerReverse[i] = 1
-		# 		playerIsAlive[i] = 1
-		# 		playerBoost[i] = 50
-		# 		if i == 0:
-		# 			playerCoordinate[i] = (100, 100)
-		# 		elif i == 1:
-		# 			playerCoordinate[i] = (width - 100, height - 100)
-		# 		elif i == 2:
-		# 			playerCoordinate[i] = (width - 100, 100)
-		# 		else:
-		# 			playerCoordinate[i] = (100, height - 100)
+		# respawn dead tank
+		for i in xrange(4):
+			if playerIsAlive[i] == 0:
+				print "creating new ",i
+				tanks[i] = (tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
+				playerIsAlive[i] = 1
 
-		# print len(bullets)
+		# move the tank
+		for i in xrange(numberOfPlayers):
+			if tanks[i].life <= 0:
+				tanks[i].isAlive = 0
+			tanks[i].updateCenter()
+			tanks[i].updateCoordinate(thisBoost[i])
 
+		# make the base rectangle for the tank
+		for j in xrange(numberOfPlayers):
+			rect = tanks[j].mobileCursor.get_rect()
+			rect.center = tanks[j].center
+			if ( tanks[j].orientation > 15 and tanks[j].orientation < 75) or ( tanks[j].orientation > 105 and tanks[j].orientation < 165 ) or (tanks[j].orientation > 195 and tanks[j].orientation < 235) or ( tanks[j].orientation > 285 and tanks[j].orientation < 345 ):
+				rect = rect.inflate(-20,-20)
+			elif tanks[j].orientation % 90 != 0:
+				rect = rect.inflate(-10,-10)
+			tanks[j].rectangle = rect
+
+		
 		bulletIsAlive = [1 for i in xrange(len(bullets))]
 
 		for i in xrange(len(bullets)):
@@ -342,23 +345,6 @@ def playGame(numberOfPlayers):
 						playerKilled[bullets[i].firedBy] += 1
 						playerIsAlive[j] = 0
 					bulletIsAlive[i] = 0
-
-		for i in xrange(numberOfPlayers):
-
-			if tanks[i].life <= 0:
-				tanks[i].isAlive = 0
-
-			tanks[i].updateCenter()
-			tanks[i].updateCoordinate(thisBoost[i])
-
-		for j in xrange(numberOfPlayers):
-			rect = tanks[j].mobileCursor.get_rect()
-			rect.center = tanks[j].center
-			if ( tanks[j].orientation > 15 and tanks[j].orientation < 75) or ( tanks[j].orientation > 105 and tanks[j].orientation < 165 ) or (tanks[j].orientation > 195 and tanks[j].orientation < 235) or ( tanks[j].orientation > 285 and tanks[j].orientation < 345 ):
-				rect = rect.inflate(-20,-20)
-			elif tanks[j].orientation % 90 != 0:
-				rect = rect.inflate(-10,-10)
-			tanks[j].rectangle = rect
 
 		# collision with upper and lower flames
 		# for i in xrange(width):
