@@ -347,68 +347,62 @@ def playGame(numberOfPlayers):
 					bulletIsAlive[i] = 0
 
 		# collision with upper and lower flames
-		# for i in xrange(width):
-		# 	point = (i, 20)
-		# 	for j in xrange(numberOfPlayers):
-		# 		if playerIsAlive[j] == 0:
-		# 			continue
-		# 		rect = playerRectangle[j]
-		# 		# pygame.draw.rect(screen, GREY, [rect.x, rect.y, rect.width, rect.height])
-		# 		if rect.collidepoint(point):
-		# 			playerIsAlive[j] = 0
-		# 			playerDied[j] += 1
-		# 			print "Hit"
-		# 			continue
-		# 	point = (i, height - 20)
-		# 	for j in xrange(numberOfPlayers):
-		# 		if playerIsAlive[j] == 0:
-		# 			continue
-		# 		rect = playerRectangle[j]
-		# 		if rect.collidepoint(point):
-		# 			playerIsAlive[j] = 0
-		# 			playerDied[j] += 1
-		# 			print "Hit"
-		# 			continue
+		for i in xrange(width):
+			point = (i, 20)
+			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
+				rect = tanks[j].rectangle
+				if rect.collidepoint(point):
+					playerIsAlive[j] = 0
+					playerDied[j] += 1
+					continue
+			point = (i, height - 20)
+			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
+				rect = tanks[j].rectangle
+				if rect.collidepoint(point):
+					playerIsAlive[j] = 0
+					playerDied[j] += 1
+					continue
 
 		# collision with left and right flames
-		# for i in xrange(height):
-		# 	point = (20, i)
-		# 	for j in xrange(numberOfPlayers):
-		# 		if playerIsAlive[j] == 0:
-		# 			continue
-		# 		rect = playerRectangle[j]
-		# 		if rect.collidepoint(point):
-		# 			playerIsAlive[j] = 0
-		# 			playerDied[j] += 1
-		# 			print "Hit"
-		# 			continue
-		# 	point = (width - 20, i)
-		# 	for j in xrange(numberOfPlayers):
-		# 		if playerIsAlive[j] == 0:
-		# 			continue
-		# 		rect = playerRectangle[j]
-		# 		if rect.collidepoint(point):
-		# 			playerIsAlive[j] = 0
-		# 			playerDied[j] += 1
-		# 			print "Hit"
-		# 			continue
+		for i in xrange(height):
+			point = (20, i)
+			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
+				rect = tanks[j].rectangle
+				if rect.collidepoint(point):
+					playerIsAlive[j] = 0
+					playerDied[j] += 1
+					continue
+			point = (width - 20, i)
+			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
+				rect = tanks[j].rectangle
+				if rect.collidepoint(point):
+					playerIsAlive[j] = 0
+					playerDied[j] += 1
+					continue
 
 		# collision with electrics
-		# for i in xrange(4):
-		# 	for j in xrange(numberOfPlayers):
-		# 		if playerIsAlive[j] == 0:
-		# 			continue
-		# 		rect = playerRectangle[j]
-		# 		if rect.colliderect(electricsRectangle[i]):
-		# 			playerIsAlive[j] = 0
-		# 			playerDied[j] += 1
-		# 			print "Hit"
-		# 			continue
-		# 	for j in xrange(len(bullets)):
-		# 		point = bullets[j].coordinate
-		# 		rect = electricsRectangle[i]
-		# 		if rect.collidepoint(point):
-		# 			bulletIsAlive[j] = 0
+		for i in xrange(4):
+			for j in xrange(numberOfPlayers):
+				if playerIsAlive[j] == 0:
+					continue
+				rect = tanks[j].rectangle
+				if rect.colliderect(electricsRectangle[i]):
+					playerIsAlive[j] = 0
+					playerDied[j] += 1
+					continue
+			for j in xrange(len(bullets)):
+				point = bullets[j].coordinate
+				rect = electricsRectangle[i]
+				if rect.collidepoint(point):
+					bulletIsAlive[j] = 0
 
 		# increase living time of bullets
 		# for i in xrange(len(bullets)):
