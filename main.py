@@ -224,6 +224,8 @@ def playGame(numberOfPlayers):
 	for i in xrange(4):
 		tanks.append(tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
 
+	rotateAntiClockwiseKeys = [pygame.K_a, pygame.K_d, pygame.K_g, pygame.K_j]
+
 	while isRunning:
 		TOTAL_TIME -= 1
 		if TOTAL_TIME <= 0:
@@ -234,27 +236,19 @@ def playGame(numberOfPlayers):
 				TOTAL_TIME = 0
 				sys.exit(0)
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_a:
-					ind = 0
-					tanks[ind].rotateAntiClockwise(rotationOffset)
-				elif event.key == pygame.K_s:
+				for i in xrange(len(rotateAntiClockwiseKeys)):
+					if event.key == rotateAntiClockwiseKeys[i]:
+						ind = i
+						tanks[ind].rotateAntiClockwise(rotationOffset)
+				if event.key == pygame.K_s:
 					ind = 0
 					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_d:
-					ind = 1
-					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_f:
 					ind = 1
 					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_g:
-					ind = 2
-					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_h:
 					ind = 2
 					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_j:
-					ind = 3
-					tanks[ind].rotateAntiClockwise(rotationOffset)
 				elif event.key == pygame.K_k:
 					ind = 3
 					tanks[ind].rotateClockwise(rotationOffset)
