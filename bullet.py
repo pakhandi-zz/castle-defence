@@ -32,8 +32,8 @@ class Bullet:
 		self.coordinate = coordinate
 		self.firedBy = firedBy
 
-		self.updateCoordinate()
+		self.updateCoordinate(30)
 
-	def updateCoordinate(self):
+	def updateCoordinate(self, unitDistance):
 		deg, x, y = getDirection(self.orientation)
-		self.coordinate = (self.coordinate[0] + (x * 30 * math.cos(math.radians(deg))) , self.coordinate[1] + (y * 30 * math.sin(math.radians(deg))) )
+		self.coordinate = (self.coordinate[0] + (x * unitDistance * math.cos(math.radians(deg))) , self.coordinate[1] + (y * unitDistance * math.sin(math.radians(deg))) )
