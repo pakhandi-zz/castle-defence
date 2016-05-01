@@ -399,17 +399,17 @@ def playGame(numberOfPlayers):
 					bulletIsAlive[j] = 0
 
 		# increase living time of bullets
-		# for i in xrange(len(bullets)):
-		# 	bullets[i].timeTravelled = bullets[i].timeTravelled + 1
-		# 	if bullets[i].timeTravelled >= bulletLifeTime:
-		# 		bulletIsAlive[i] = 0
+		for i in xrange(len(bullets)):
+			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
+			if bullets[i].timeTravelled >= bulletLifeTime:
+				bulletIsAlive[i] = 0
 
 		# removing bullets
-		# removed = 0
-		# for i in xrange(len(bulletIsAlive)):
-		# 	if bulletIsAlive[i] == 0:
-		# 		bullets.pop(i - removed)
-		# 		removed = removed + 1
+		removed = 0
+		for i in xrange(len(bulletIsAlive)):
+			if bulletIsAlive[i] == 0:
+				bullets.pop(i - removed)
+				removed = removed + 1
 
 		# Collision of tanks
 		# for i in xrange(numberOfPlayers):
@@ -468,7 +468,7 @@ def playGame(numberOfPlayers):
 		# process bullets
 		for i in xrange(len(bullets)):
 			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
-			bullets[i].updateCoordinate()
+			bullets[i].updateCoordinate(1.5)
 			pygame.draw.circle(screen, BLACK, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
 
 		# display electricity
