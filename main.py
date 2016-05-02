@@ -412,19 +412,19 @@ def playGame(numberOfPlayers):
 				removed = removed + 1
 
 		# Collision of tanks
-		# for i in xrange(numberOfPlayers):
-		# 	for j in xrange(numberOfPlayers):
-		# 		if i == j:
-		# 			continue
-		# 		if playerIsAlive[j] == 0:
-		# 			continue
-		# 		rect1 = playerRectangle[i]
-		# 		rect2 = playerRectangle[j]
-		# 		if rect1.colliderect(rect2) == 1:
-		# 			playerIsAlive[i] = 0
-		# 			playerIsAlive[j] = 0
-		# 			playerDied[i] = playerDied[i] + 1
-		# 			playerDied[j] = playerDied[j] + 1
+		for i in xrange(numberOfPlayers):
+			for j in xrange(numberOfPlayers):
+				if i == j:
+					continue
+				if playerIsAlive[j] == 0:
+					continue
+				rect1 = tanks[i].rectangle
+				rect2 = tanks[j].rectangle
+				if rect1.colliderect(rect2) == 1:
+					playerIsAlive[i] = 0
+					playerIsAlive[j] = 0
+					playerDied[i] = playerDied[i] + 1
+					playerDied[j] = playerDied[j] + 1
 
 		screen.fill(BLACK)
 		i = 0
