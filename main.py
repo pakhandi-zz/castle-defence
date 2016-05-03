@@ -436,14 +436,14 @@ def playGame(numberOfPlayers):
 			i += 200
 
 		 
-		# for i in xrange(numberOfPlayers):
-		# 	pygame.draw.rect(screen, BLACK, playerBoostBar[i])
+		for i in xrange(numberOfPlayers):
+			pygame.draw.rect(screen, BLACK, tanks[i].boostBar)
 
-		# for i in xrange(numberOfPlayers):
-		# 	if playerIsAlive[i] == 1:
-		# 		rect = deepcopy(playerBoostBar[i])
-		# 		rect.width = playerBoost[i] * 2
-		# 		pygame.draw.rect(screen, BLUE, rect)
+		for i in xrange(numberOfPlayers):
+			if playerIsAlive[i] == 1:
+				rect = deepcopy(tanks[i].boostBar)
+				rect.width = tanks[i].boost * 2
+				pygame.draw.rect(screen, BLUE, rect)
 
 		for i in xrange(numberOfPlayers):
 			pygame.draw.rect(screen, BLACK, tanks[i].lifeBar)
