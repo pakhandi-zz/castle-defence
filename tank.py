@@ -65,7 +65,7 @@ class Tank:
 		self.life = life
 		self.boost = boost
 		self.lifeBar = pygame.Rect(lifeBarX, lifeBarY, lifeBarW, lifeBarH)
-		self.boostBar = pygame.Rect(boostBarX, boostBarY, lifeBarY, lifeBarX)
+		self.boostBar = pygame.Rect(boostBarX, boostBarY, boostBarW, boostBarH)
 		self.fixedCursor = pygame.image.load(self.imageFile)
 		self.mobileCursor = self.fixedCursor
 		self.mobileCursor =  pygame.transform.rotate(self.fixedCursor, self.orientation)
