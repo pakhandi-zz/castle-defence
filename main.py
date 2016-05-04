@@ -454,11 +454,11 @@ def playGame(numberOfPlayers):
 				rect.width = tanks[i].life
 				pygame.draw.rect(screen, GREEN, rect)
 
-		# for i in xrange(4):
-		# 	pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
-		# 	screen.blit(font1.render("+"+str(playerKilled[i]),True, GREEN), (centers[i][0] - 40, centers[i][1] - 20))
-		# 	screen.blit(font1.render("/",True, WHITE), (centers[i][0], centers[i][1] - 20))
-		# 	screen.blit(font1.render("-"+str(playerDied[i]),True, RED), (centers[i][0] + 5, centers[i][1] - 20))
+		for i in xrange(4):
+			pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
+			screen.blit(font1.render("+"+str(playerKilled[i]),True, GREEN), (centers[i][0] - 40, centers[i][1] - 20))
+			screen.blit(font1.render("/",True, WHITE), (centers[i][0], centers[i][1] - 20))
+			screen.blit(font1.render("-"+str(playerDied[i]),True, RED), (centers[i][0] + 5, centers[i][1] - 20))
 		
 		# display border
 		ftype = (ftype + 1) % 3
