@@ -225,6 +225,7 @@ def playGame(numberOfPlayers):
 		tanks.append(tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
 
 	rotateAntiClockwiseKeys = [pygame.K_a, pygame.K_d, pygame.K_g, pygame.K_j]
+	rotateClockwiseKeys = [pygame.K_s, pygame.K_f, pygame.K_h, pygame.K_k]
 
 	while isRunning:
 		TOTAL_TIME -= 1
@@ -240,19 +241,13 @@ def playGame(numberOfPlayers):
 					if event.key == rotateAntiClockwiseKeys[i]:
 						ind = i
 						tanks[ind].rotateAntiClockwise(rotationOffset)
-				if event.key == pygame.K_s:
-					ind = 0
-					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_f:
-					ind = 1
-					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_h:
-					ind = 2
-					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_k:
-					ind = 3
-					tanks[ind].rotateClockwise(rotationOffset)
-				elif event.key == pygame.K_z:
+				
+				for i in xrange(len(rotateClockwiseKeys)):
+					if event.key == rotateClockwiseKeys[i]:
+						ind = i
+						tanks[ind].rotateClockwise(rotationOffset)
+
+				if event.key == pygame.K_z:
 					ind = 0
 					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
 					bullets.append(temp)
