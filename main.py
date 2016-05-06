@@ -226,6 +226,10 @@ def playGame(numberOfPlayers):
 
 	rotateAntiClockwiseKeys = [pygame.K_a, pygame.K_d, pygame.K_g, pygame.K_j]
 	rotateClockwiseKeys = [pygame.K_s, pygame.K_f, pygame.K_h, pygame.K_k]
+	shootBulletKeys = [pygame.K_z, pygame.K_c, pygame.K_b, pygame.K_m]
+	reverseGearKeys = [pygame.K_w, pygame.K_r, pygame.K_y, pygame.K_i]
+	boostKeys = [pygame.K_e, pygame.K_t, pygame.K_u, pygame.K_o]
+
 
 	while isRunning:
 		TOTAL_TIME -= 1
@@ -247,35 +251,27 @@ def playGame(numberOfPlayers):
 						ind = i
 						tanks[ind].rotateClockwise(rotationOffset)
 
-				if event.key == pygame.K_z:
-					ind = 0
-					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
-					bullets.append(temp)
-				elif event.key == pygame.K_c:
-					ind = 1
-					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
-					bullets.append(temp)
-				elif event.key == pygame.K_b:
-					ind = 2
-					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
-					bullets.append(temp)
-				elif event.key == pygame.K_m:
-					ind = 3
-					temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
-					bullets.append(temp)
-				elif event.key == pygame.K_w:
-					ind = 0
-					tanks[ind].toggleReverse()
-				elif event.key == pygame.K_r:
-					ind = 1
-					tanks[ind].toggleReverse()
-				elif event.key == pygame.K_y:
-					ind = 2
-					tanks[ind].toggleReverse()
-				elif event.key == pygame.K_i:
-					ind = 3
-					tanks[ind].toggleReverse()
-				elif event.key == pygame.K_e:
+
+				for i in xrange(len(shootBulletKeys)):
+					if event.key == shootBulletKeys[i]:
+						ind = i
+						temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
+						bullets.append(temp)
+
+				for i in xrange(len(reverseGearKeys)):
+					if event.key == reverseGearKeys[i]:
+						ind = i
+						tanks[ind].toggleReverse()
+
+				for i in xrange(len(boostKeys)):
+					if event.key == boostKeys[i]:
+						ind = i
+						if tanks[ind].boost > 0:
+							thisBoost[ind] = 1
+							tanks[ind].boost -= 1
+
+				
+				if event.key == pygame.K_e:
 					ind = 0
 					if tanks[ind].boost > 0:
 						thisBoost[ind] = 1
