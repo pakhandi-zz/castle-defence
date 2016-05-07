@@ -248,28 +248,6 @@ def playGame(numberOfPlayers):
 						if tanks[ind].boost > 0:
 							thisBoost[ind] = 1
 							tanks[ind].boost -= 1
-
-				
-				if event.key == pygame.K_e:
-					ind = 0
-					if tanks[ind].boost > 0:
-						thisBoost[ind] = 1
-						tanks[ind].boost -= 1
-				elif event.key == pygame.K_t:
-					ind = 1
-					if tanks[ind].boost > 0:
-						thisBoost[ind] = 1
-						tanks[ind].boost -= 1
-				elif event.key == pygame.K_u:
-					ind = 2
-					if tanks[ind].boost > 0:
-						thisBoost[ind] = 1
-						tanks[ind].boost -= 1
-				elif event.key == pygame.K_o:
-					ind = 3
-					if tanks[ind].boost > 0:
-						thisBoost[ind] = 1
-						tanks[ind].boost -= 1
 	
 		
 		# respawn dead tank
