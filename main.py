@@ -18,7 +18,6 @@ BULLET_DAMAGE = 10
 
 width = 1200
 height = 700
-# (width, height) = (1200, 700)
 BLACK = (0, 0, 0)
 BROWN = (240,150,0)
 GREY = (200,200,200)
@@ -175,15 +174,10 @@ def playGame(numberOfPlayers):
 	electricsRectangle[1] = pygame.Rect(width / 2, height - 200, 20, 200)
 	electricsRectangle[2] = pygame.Rect(0, height / 2, 300, 20)
 	electricsRectangle[3] = pygame.Rect(width - 300, height / 2, 300, 20)
-
-	
 	
 	for center in centers:
 		pygame.draw.circle(screen, GREY, center, 40, 0 )
 	
-	# for wall in walls:
-	# 	pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
-
 	pygame.display.flip()
 
 	isRunning = True
