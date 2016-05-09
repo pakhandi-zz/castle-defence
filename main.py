@@ -271,6 +271,8 @@ def playGame(numberOfPlayers):
 		
 		bulletIsAlive = [1 for i in xrange(len(bullets))]
 
+		# Collision with bullet
+
 		for i in xrange(len(bullets)):
 			for j in xrange(numberOfPlayers):
 				rect = tanks[j].rectangle
@@ -377,7 +379,7 @@ def playGame(numberOfPlayers):
 				j += 200
 			i += 200
 
-		 
+		# Display the boostBar
 		for i in xrange(numberOfPlayers):
 			pygame.draw.rect(screen, BLACK, tanks[i].boostBar)
 
@@ -387,6 +389,7 @@ def playGame(numberOfPlayers):
 				rect.width = tanks[i].boost * 2
 				pygame.draw.rect(screen, BLUE, rect)
 
+		# Display the lifeBar
 		for i in xrange(numberOfPlayers):
 			pygame.draw.rect(screen, BLACK, tanks[i].lifeBar)
 
@@ -396,6 +399,7 @@ def playGame(numberOfPlayers):
 				rect.width = tanks[i].life
 				pygame.draw.rect(screen, GREEN, rect)
 
+		# Diplay the castle
 		for i in xrange(4):
 			pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
 			screen.blit(font1.render("+"+str(playerKilled[i]),True, GREEN), (centers[i][0] - 40, centers[i][1] - 20))
