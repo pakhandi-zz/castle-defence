@@ -31,6 +31,7 @@ YELLOW = (255,255,0)
 
 def playGame(numberOfPlayers):
 	TOTAL_TIME = 100000 / 5
+	currTime = 0
 	screen = pygame.display.set_mode((width, height))
 	pygame.display.set_caption("Castle Defence")
 
@@ -205,8 +206,8 @@ def playGame(numberOfPlayers):
 
 
 	while isRunning:
-		TOTAL_TIME -= 1
-		if TOTAL_TIME <= 0:
+		currTime += 1
+		if currTime == TOTAL_TIME:
 			break;
 		thisBoost = [0 for i in xrange(4)]
 		for event in pygame.event.get():
@@ -423,7 +424,7 @@ def playGame(numberOfPlayers):
 			screen.blit( electrics[etype] , point)
 		for point in electricsHorizontolCoordinates:
 			screen.blit( electricsHorizontol[etype] , point)
-		pygame.draw.rect( screen, BLUE, [100, 5, TOTAL_TIME / 100, 5] )
+		pygame.draw.rect( screen, BLUE, [100, 5, (currTime / TOTAL_TIME) * 1000, 5] )
 
 		# display tanks
 		for i in xrange(numberOfPlayers):
@@ -458,8 +459,6 @@ def playGame(numberOfPlayers):
 	toPrint = [(200, 200), (200, 320), (200, 440), (200, 560)]
 	for i in xrange(numberOfPlayers):
 		screen.blit(font2.render(str(i + 1),True, WHITE), toPrint[i])
-
-
 
 	toPrint = [(550, 200), (550, 320), (550, 440), (550, 560)]
 	for i in xrange(numberOfPlayers):
