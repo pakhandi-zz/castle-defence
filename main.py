@@ -6,37 +6,11 @@ import Server
 import thread
 from Queue import Queue
 
+import tank
+import bullet
+
 pygame.init()
 pygame.display.init()
-
-class Bullet:
-
-	def __init__(self):
-		timeTravelled = 0
-		orientation = 0
-		coordinate = (0,0)
-		firedBy = -1
-		# return self
-
-def getDirection(orientation):
-	deg = orientation
-	x = +1
-	y = -1
-
-	if orientation > 90 and orientation <= 180:
-		deg = 180 - orientation
-		x = -1
-		y = -1
-	elif orientation > 180 and orientation<= 270:
-		deg = orientation - 180
-		x = -1
-		y = +1
-	elif orientation > 270 and orientation <= 360:
-		deg = 360 - orientation
-		x = +1
-		y = +1
-
-	return deg, x, y
 
 BULLET_DAMAGE = 10
 # 10 ** 18
@@ -44,7 +18,6 @@ BULLET_DAMAGE = 10
 
 width = 1200
 height = 700
-# (width, height) = (1200, 700)
 BLACK = (0, 0, 0)
 BROWN = (240,150,0)
 GREY = (200,200,200)
@@ -58,6 +31,7 @@ YELLOW = (255,255,0)
 
 def playGame(numberOfPlayers):
 	TOTAL_TIME = 100000 / 5
+	currTime = TOTAL_TIME
 	screen = pygame.display.set_mode((width, height))
 	pygame.display.set_caption("Castle Defence")
 
@@ -89,9 +63,6 @@ def playGame(numberOfPlayers):
 
 	# player is alive
 	playerIsAlive = [1 for i in xrange(4)]
-
-	# center of every player
-	playerCenter = [0 for i in xrange(4)]
 	
 	# coordinate of every player
 	playerCoordinate = []
@@ -100,58 +71,27 @@ def playGame(numberOfPlayers):
 	playerCoordinate.append((width - 140, 100))
 	playerCoordinate.append((100,height - 140))
 
-	# player cursors
-	playerCursor = []
-	newPlayerCursor = []
-
-	playerCursor.append(pygame.image.load('images/green_tank.png'))
-	newPlayerCursor.append(pygame.image.load('images/green_tank.png'))
-
-	playerCursor.append(pygame.image.load('images/red_tank.png'))
-	newPlayerCursor.append(pygame.image.load('images/red_tank.png'))
-
-	playerCursor.append(pygame.image.load('images/blue_tank.png'))
-	newPlayerCursor.append(pygame.image.load('images/blue_tank.png'))
-
-	playerCursor.append(pygame.image.load('images/yellow_tank.png'))
-	newPlayerCursor.append(pygame.image.load('images/yellow_tank.png'))
+	# imagefilenames
+	imageFilename = ['images/green_tank.png', 'images/red_tank.png', 'images/blue_tank.png', 'images/yellow_tank.png']
 
 	bgImage = pygame.image.load('images/terrain.jpg')
 
 	# Orientation of each player
 	playerOrientation = [0 for i in xrange(4)]
 	playerOrientation[1] = 180
-	newPlayerCursor[1] = pygame.transform.rotate(playerCursor[1], playerOrientation[1])
-
 	playerOrientation[2] = 180
-	newPlayerCursor[2] = pygame.transform.rotate(playerCursor[2], playerOrientation[2])
 
-	# Player rectangle
-	playerRectangle = [pygame.rect for i in xrange(4)]
+	# details for lifeBar
+	playerLifeBarX = [100, width - 230, width - 230, 100]
+	playerLifeBarY = [40, height - 50, 40, height - 50]
+	playerLifeBarW = 100
+	playerLifeBarH = 5
 
-	# Player Life
-	playerLife = [100 for i in xrange(4)]
-
-	# player life bar
-	playerLifeBar = [pygame.rect for i in xrange(4)]
-	playerLifeBar[0] = pygame.Rect(100, 40, 100, 5)
-	playerLifeBar[1] = pygame.Rect(width - 230, height - 50, 100, 5)
-	playerLifeBar[2] = pygame.Rect(width - 230, 40, 100, 5)
-	playerLifeBar[3] = pygame.Rect(100, height - 50, 100, 5)
-
-	# player reverse
-	playerReverse = [1 for i in xrange(4)]
-
-	# player boost
-	playerBoost = [50 for i in range(4)]
-
-	# player boost bar
-	playerBoostBar = [pygame.rect for i in xrange(4)]
-	playerBoostBar[0] = pygame.Rect(100, 50, 100, 5)
-	playerBoostBar[1] = pygame.Rect(width - 230, height - 40, 100, 5)
-	playerBoostBar[2] = pygame.Rect(width - 230, 50, 100, 5)
-	playerBoostBar[3] = pygame.Rect(100, height - 40, 100, 5)
-
+	# details for boost bar
+	playerBoostBarX = [100, width - 230, width - 230, 100]
+	playerBoostBarY = [50, height - 40, 50, height - 40]
+	playerBoostBarW = 100
+	playerBoostBarH = 5
 
 	# points
 	playerDied = [0 for i in xrange(4)]
@@ -235,15 +175,10 @@ def playGame(numberOfPlayers):
 	electricsRectangle[1] = pygame.Rect(width / 2, height - 200, 20, 200)
 	electricsRectangle[2] = pygame.Rect(0, height / 2, 300, 20)
 	electricsRectangle[3] = pygame.Rect(width - 300, height / 2, 300, 20)
-
-	
 	
 	for center in centers:
 		pygame.draw.circle(screen, GREY, center, 40, 0 )
 	
-	# for wall in walls:
-	# 	pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
-
 	pygame.display.flip()
 
 	isRunning = True
@@ -259,11 +194,20 @@ def playGame(numberOfPlayers):
 
 	rotationOffset = 10
 
-	# r = pygame.draw.rect(screen, BROWN, [200, 200, 20 , 10] )
+	tanks = []
+	for i in xrange(4):
+		tanks.append(tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
+
+	rotateAntiClockwiseKeys = [pygame.K_a, pygame.K_d, pygame.K_g, pygame.K_j]
+	rotateClockwiseKeys = [pygame.K_s, pygame.K_f, pygame.K_h, pygame.K_k]
+	shootBulletKeys = [pygame.K_z, pygame.K_c, pygame.K_b, pygame.K_m]
+	reverseGearKeys = [pygame.K_w, pygame.K_r, pygame.K_y, pygame.K_i]
+	boostKeys = [pygame.K_e, pygame.K_t, pygame.K_u, pygame.K_o]
+
 
 	while isRunning:
-		TOTAL_TIME -= 1
-		if TOTAL_TIME <= 0:
+		currTime -= 1
+		if currTime == 0:
 			break;
 		thisBoost = [0 for i in xrange(4)]
 		for event in pygame.event.get():
@@ -271,165 +215,75 @@ def playGame(numberOfPlayers):
 				TOTAL_TIME = 0
 				sys.exit(0)
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_a:
-					playerOrientation[0] = ( (playerOrientation[0] + rotationOffset) + 360 ) % 360
-					newPlayerCursor[0] = pygame.transform.rotate(playerCursor[0], playerOrientation[0])
-				elif event.key == pygame.K_s:
-					playerOrientation[0] = ( (playerOrientation[0] - rotationOffset) + 360 ) % 360
-					newPlayerCursor[0] = pygame.transform.rotate(playerCursor[0], playerOrientation[0])
-				elif event.key == pygame.K_d:
-					playerOrientation[1] = ( (playerOrientation[1] + rotationOffset) + 360 ) % 360
-					newPlayerCursor[1] = pygame.transform.rotate(playerCursor[1], playerOrientation[1])
-				elif event.key == pygame.K_f:
-					playerOrientation[1] = ( (playerOrientation[1] - rotationOffset) + 360 ) % 360
-					newPlayerCursor[1] = pygame.transform.rotate(playerCursor[1], playerOrientation[1])
-				elif event.key == pygame.K_g:
-					playerOrientation[2] = ( (playerOrientation[2] + rotationOffset) + 360 ) % 360
-					newPlayerCursor[2] = pygame.transform.rotate(playerCursor[2], playerOrientation[2])
-				elif event.key == pygame.K_h:
-					playerOrientation[2] = ( (playerOrientation[2] - rotationOffset) + 360 ) % 360
-					newPlayerCursor[2] = pygame.transform.rotate(playerCursor[2], playerOrientation[2])
-				elif event.key == pygame.K_j:
-					playerOrientation[3] = ( (playerOrientation[3] + rotationOffset) + 360 ) % 360
-					newPlayerCursor[3] = pygame.transform.rotate(playerCursor[3], playerOrientation[3])
-				elif event.key == pygame.K_k:
-					playerOrientation[3] = ( (playerOrientation[3] - rotationOffset) + 360 ) % 360
-					newPlayerCursor[3] = pygame.transform.rotate(playerCursor[3], playerOrientation[3])
-				elif event.key == pygame.K_z:
-					temp = Bullet()
-					temp.firedBy = 0
-					temp.timeTravelled = 0
-					temp.orientation = playerOrientation[0]
-					temp.coordinate = playerCenter[0]
-					deg, x, y = getDirection(temp.orientation)
-					temp.coordinate = (temp.coordinate[0] +  (x * 30 * math.cos(math.radians(deg ) ) ) , temp.coordinate[1] + (y * 30 * math.sin(math.radians(deg ) ) ) )
-					bullets.append(temp)
-				elif event.key == pygame.K_c:
-					temp = Bullet()
-					temp.firedBy = 1
-					temp.timeTravelled = 0
-					temp.orientation = playerOrientation[1]
-					temp.coordinate = playerCenter[1]
-					deg, x, y = getDirection(temp.orientation)
-					temp.coordinate = (temp.coordinate[0] +  (x * 30 * math.cos(math.radians(deg ) ) ) , temp.coordinate[1] + (y * 30 * math.sin(math.radians(deg ) ) ) )
-					bullets.append(temp)
-				elif event.key == pygame.K_b:
-					temp = Bullet()
-					temp.firedBy = 2
-					temp.timeTravelled = 0
-					temp.orientation = playerOrientation[2]
-					temp.coordinate = playerCenter[2]
-					deg, x, y = getDirection(temp.orientation)
-					temp.coordinate = (temp.coordinate[0] +  (x * 30 * math.cos(math.radians(deg ) ) ) , temp.coordinate[1] + (y * 30 * math.sin(math.radians(deg ) ) ) )
-					bullets.append(temp)
-				elif event.key == pygame.K_m:
-					temp = Bullet()
-					temp.firedBy = 3
-					temp.timeTravelled = 0
-					temp.orientation = playerOrientation[3]
-					temp.coordinate = playerCenter[3]
-					deg, x, y = getDirection(temp.orientation)
-					temp.coordinate = (temp.coordinate[0] +  (x * 30 * math.cos(math.radians(deg ) ) ) , temp.coordinate[1] + (y * 30 * math.sin(math.radians(deg ) ) ) )
-					bullets.append(temp)
-				elif event.key == pygame.K_w:
-					if playerReverse[0] == 1:
-						playerReverse[0] = -1
-					else:
-						playerReverse[0] = 1
-				elif event.key == pygame.K_r:
-					if playerReverse[1] == 1:
-						playerReverse[1] = -1
-					else:
-						playerReverse[1] = 1
-				elif event.key == pygame.K_y:
-					if playerReverse[2] == 1:
-						playerReverse[2] = -1
-					else:
-						playerReverse[2] = 1
-				elif event.key == pygame.K_i:
-					if playerReverse[3] == 1:
-						playerReverse[3] = -1
-					else:
-						playerReverse[3] = 1
-				elif event.key == pygame.K_e:
-					i = 0
-					if playerBoost[i] > 0:
-						thisBoost[i] = 1
-						playerBoost[i] -= 1
-				elif event.key == pygame.K_t:
-					i = 1
-					if playerBoost[i] > 0:
-						thisBoost[i] = 1
-						playerBoost[i] -= 1
-				elif event.key == pygame.K_u:
-					i = 2
-					if playerBoost[i] > 0:
-						thisBoost[i] = 1
-						playerBoost[i] -= 1
-				elif event.key == pygame.K_o:
-					i = 3
-					if playerBoost[i] > 0:
-						thisBoost[i] = 1
-						playerBoost[i] -= 1
+				for i in xrange(len(rotateAntiClockwiseKeys)):
+					if event.key == rotateAntiClockwiseKeys[i]:
+						ind = i
+						tanks[ind].rotateAntiClockwise(rotationOffset)
+				
+				for i in xrange(len(rotateClockwiseKeys)):
+					if event.key == rotateClockwiseKeys[i]:
+						ind = i
+						tanks[ind].rotateClockwise(rotationOffset)
+
+
+				for i in xrange(len(shootBulletKeys)):
+					if event.key == shootBulletKeys[i]:
+						ind = i
+						temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
+						bullets.append(temp)
+
+				for i in xrange(len(reverseGearKeys)):
+					if event.key == reverseGearKeys[i]:
+						ind = i
+						tanks[ind].toggleReverse()
+
+				for i in xrange(len(boostKeys)):
+					if event.key == boostKeys[i]:
+						ind = i
+						if tanks[ind].boost > 0:
+							thisBoost[ind] = 1
+							tanks[ind].boost -= 1
 	
 		
+		# respawn dead tank
 		for i in xrange(4):
 			if playerIsAlive[i] == 0:
-				playerLife[i] = 100
-				if i == 1 or i == 2:
-					playerOrientation[i] = 180
-				else:
-					playerOrientation[i] = 0
-				newPlayerCursor[i] = pygame.transform.rotate(playerCursor[i], playerOrientation[i])
-				playerReverse[i] = 1
+				print "creating new ",i
+				tanks[i] = (tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
 				playerIsAlive[i] = 1
-				playerBoost[i] = 50
-				if i == 0:
-					playerCoordinate[i] = (100, 100)
-				elif i == 1:
-					playerCoordinate[i] = (width - 100, height - 100)
-				elif i == 2:
-					playerCoordinate[i] = (width - 100, 100)
-				else:
-					playerCoordinate[i] = (100, height - 100)
 
-		# print len(bullets)
+		# move the tank
+		for i in xrange(numberOfPlayers):
+			if tanks[i].life <= 0:
+				tanks[i].isAlive = 0
+			tanks[i].updateCenter()
+			tanks[i].updateCoordinate(thisBoost[i])
 
+		# make the base rectangle for the tank
+		for j in xrange(numberOfPlayers):
+			rect = tanks[j].mobileCursor.get_rect()
+			rect.center = tanks[j].center
+			if ( tanks[j].orientation > 15 and tanks[j].orientation < 75) or ( tanks[j].orientation > 105 and tanks[j].orientation < 165 ) or (tanks[j].orientation > 195 and tanks[j].orientation < 235) or ( tanks[j].orientation > 285 and tanks[j].orientation < 345 ):
+				rect = rect.inflate(-20,-20)
+			elif tanks[j].orientation % 90 != 0:
+				rect = rect.inflate(-10,-10)
+			tanks[j].rectangle = rect
+
+		
 		bulletIsAlive = [1 for i in xrange(len(bullets))]
+
+		# Collision with bullet
 
 		for i in xrange(len(bullets)):
 			for j in xrange(numberOfPlayers):
-				rect = playerRectangle[j]
+				rect = tanks[j].rectangle
 				if rect.collidepoint(bullets[i].coordinate) and bulletIsAlive[i] == 1:
-					playerLife[j] = playerLife[j] - BULLET_DAMAGE
-					if playerLife[j] <= 0:
+					tanks[j].life = tanks[j].life - BULLET_DAMAGE
+					if tanks[j].life <= 0:
 						playerDied[j] = playerDied[j] + 1
 						playerKilled[bullets[i].firedBy] += 1
 						playerIsAlive[j] = 0
 					bulletIsAlive[i] = 0
-
-		for i in xrange(numberOfPlayers):
-
-			if playerLife <= 0:
-				playerIsAlive[i] = 0
-
-			deg, x, y = getDirection(playerOrientation[i])
-			playerCenter[i] = newPlayerCursor[i].get_rect().center
-			playerCenter[i] = (playerCenter[i][0] + playerCoordinate[i][0] , playerCenter[i][1] + playerCoordinate[i][1])
-			if thisBoost[i] == 1:
-				playerCoordinate[i] = (playerCoordinate[i][0] +  (x * playerReverse[i] * 10 * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y *  playerReverse[i] * 10 * unitDistance * math.sin(math.radians(deg ) ) ) )
-			else:
-				playerCoordinate[i] = (playerCoordinate[i][0] +  (x * playerReverse[i] * unitDistance * math.cos(math.radians(deg ) ) ) , playerCoordinate[i][1] + (y *  playerReverse[i] * unitDistance * math.sin(math.radians(deg ) ) ) )
-			# screen.blit(newPlayerCursor[i], playerCoordinate[i] )
-
-		for j in xrange(numberOfPlayers):
-			rect = newPlayerCursor[j].get_rect()
-			rect.center = playerCenter[j]
-			if ( playerOrientation[j] > 15 and playerOrientation[j] < 75) or ( playerOrientation[j] > 105 and playerOrientation[j] < 165 ) or (playerOrientation[j] > 195 and playerOrientation[j] < 235) or ( playerOrientation[j] > 285 and playerOrientation[j] < 345 ):
-				rect = rect.inflate(-20,-20)
-			elif playerOrientation[j] % 90 != 0:
-				rect = rect.inflate(-10,-10)
-			playerRectangle[j] = rect
 
 		# collision with upper and lower flames
 		for i in xrange(width):
@@ -437,22 +291,19 @@ def playGame(numberOfPlayers):
 			for j in xrange(numberOfPlayers):
 				if playerIsAlive[j] == 0:
 					continue
-				rect = playerRectangle[j]
-				# pygame.draw.rect(screen, GREY, [rect.x, rect.y, rect.width, rect.height])
+				rect = tanks[j].rectangle
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
 					playerDied[j] += 1
-					print "Hit"
 					continue
 			point = (i, height - 20)
 			for j in xrange(numberOfPlayers):
 				if playerIsAlive[j] == 0:
 					continue
-				rect = playerRectangle[j]
+				rect = tanks[j].rectangle
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
 					playerDied[j] += 1
-					print "Hit"
 					continue
 
 		# collision with left and right flames
@@ -461,21 +312,19 @@ def playGame(numberOfPlayers):
 			for j in xrange(numberOfPlayers):
 				if playerIsAlive[j] == 0:
 					continue
-				rect = playerRectangle[j]
+				rect = tanks[j].rectangle
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
 					playerDied[j] += 1
-					print "Hit"
 					continue
 			point = (width - 20, i)
 			for j in xrange(numberOfPlayers):
 				if playerIsAlive[j] == 0:
 					continue
-				rect = playerRectangle[j]
+				rect = tanks[j].rectangle
 				if rect.collidepoint(point):
 					playerIsAlive[j] = 0
 					playerDied[j] += 1
-					print "Hit"
 					continue
 
 		# collision with electrics
@@ -483,11 +332,10 @@ def playGame(numberOfPlayers):
 			for j in xrange(numberOfPlayers):
 				if playerIsAlive[j] == 0:
 					continue
-				rect = playerRectangle[j]
+				rect = tanks[j].rectangle
 				if rect.colliderect(electricsRectangle[i]):
 					playerIsAlive[j] = 0
 					playerDied[j] += 1
-					print "Hit"
 					continue
 			for j in xrange(len(bullets)):
 				point = bullets[j].coordinate
@@ -515,8 +363,8 @@ def playGame(numberOfPlayers):
 					continue
 				if playerIsAlive[j] == 0:
 					continue
-				rect1 = playerRectangle[i]
-				rect2 = playerRectangle[j]
+				rect1 = tanks[i].rectangle
+				rect2 = tanks[j].rectangle
 				if rect1.colliderect(rect2) == 1:
 					playerIsAlive[i] = 0
 					playerIsAlive[j] = 0
@@ -532,55 +380,61 @@ def playGame(numberOfPlayers):
 				j += 200
 			i += 200
 
-		 
+		# Display the boostBar
 		for i in xrange(numberOfPlayers):
-			pygame.draw.rect(screen, BLACK, playerBoostBar[i])
+			pygame.draw.rect(screen, BLACK, tanks[i].boostBar)
 
 		for i in xrange(numberOfPlayers):
 			if playerIsAlive[i] == 1:
-				rect = deepcopy(playerBoostBar[i])
-				rect.width = playerBoost[i] * 2
+				rect = deepcopy(tanks[i].boostBar)
+				rect.width = tanks[i].boost * 2
 				pygame.draw.rect(screen, BLUE, rect)
 
+		# Display the lifeBar
 		for i in xrange(numberOfPlayers):
-			pygame.draw.rect(screen, BLACK, playerLifeBar[i])
+			pygame.draw.rect(screen, BLACK, tanks[i].lifeBar)
 
 		for i in xrange(numberOfPlayers):
 			if playerIsAlive[i] == 1:
-				rect = deepcopy(playerLifeBar[i])
-				rect.width = playerLife[i]
+				rect = deepcopy(tanks[i].lifeBar)
+				rect.width = tanks[i].life
 				pygame.draw.rect(screen, GREEN, rect)
 
+		# Diplay the castle
 		for i in xrange(4):
 			pygame.draw.circle(screen, GREY, centers[i], 40, 0 )
 			screen.blit(font1.render("+"+str(playerKilled[i]),True, GREEN), (centers[i][0] - 40, centers[i][1] - 20))
 			screen.blit(font1.render("/",True, WHITE), (centers[i][0], centers[i][1] - 20))
 			screen.blit(font1.render("-"+str(playerDied[i]),True, RED), (centers[i][0] + 5, centers[i][1] - 20))
-
-		# for wall in walls:
-		# 	pygame.draw.rect( screen, BROWN, [wall[0],wall[1],10,10] )
+		
+		# display border
 		ftype = (ftype + 1) % 3
 		for point in flamesCoordinate:
 			screen.blit( flames[ftype] , point)
-		etype = (etype + 1) % 2
+		
+		# process bullets
 		for i in xrange(len(bullets)):
 			bullets[i].timeTravelled = bullets[i].timeTravelled + 1
-			deg, x, y = getDirection(bullets[i].orientation)
-			bullets[i].coordinate = (bullets[i].coordinate[0] +  (x * bulletDistance * math.cos(math.radians(deg ) ) ) , bullets[i].coordinate[1] + (y * bulletDistance * math.sin(math.radians(deg ) ) ) )
+			bullets[i].updateCoordinate(1.5)
 			pygame.draw.circle(screen, BLACK, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0 )
 
+		# display electricity
+		etype = (etype + 1) % 2
 		for point in electricsCoordinates:
 			screen.blit( electrics[etype] , point)
 		for point in electricsHorizontolCoordinates:
 			screen.blit( electricsHorizontol[etype] , point)
-		pygame.draw.rect( screen, BLUE, [100, 5, TOTAL_TIME / 100, 5] )
+		pygame.draw.rect( screen, BLUE, [100, 5, (float(currTime) / (float)(TOTAL_TIME)) * 1000, 5] )
 
+		# display tanks
 		for i in xrange(numberOfPlayers):
 			if playerIsAlive[i] == 1:
-				screen.blit(newPlayerCursor[i], playerCoordinate[i] )
+				screen.blit(tanks[i].mobileCursor, tanks[i].coordinate )
 
 		pygame.display.update()
 		clock.tick(80)
+
+	# return
 	screen.fill(BLACK)
 	pygame.display.update()
 	screen.blit(font2.render("RANK",True, WHITE), (150, 100))
@@ -605,8 +459,6 @@ def playGame(numberOfPlayers):
 	toPrint = [(200, 200), (200, 320), (200, 440), (200, 560)]
 	for i in xrange(numberOfPlayers):
 		screen.blit(font2.render(str(i + 1),True, WHITE), toPrint[i])
-
-
 
 	toPrint = [(550, 200), (550, 320), (550, 440), (550, 560)]
 	for i in xrange(numberOfPlayers):
