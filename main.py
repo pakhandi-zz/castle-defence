@@ -6,8 +6,7 @@ import Server
 import thread
 from Queue import Queue
 
-import tank
-import bullet
+import gameComponents
 
 pygame.init()
 pygame.display.init()
@@ -194,7 +193,7 @@ def playGame(numberOfPlayers):
 
 	tanks = []
 	for i in xrange(4):
-		tanks.append(tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
+		tanks.append(gameComponents.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
 
 	rotateAntiClockwiseKeys = [pygame.K_a, pygame.K_d, pygame.K_g, pygame.K_j]
 	rotateClockwiseKeys = [pygame.K_s, pygame.K_f, pygame.K_h, pygame.K_k]
@@ -227,7 +226,7 @@ def playGame(numberOfPlayers):
 				for i in xrange(len(shootBulletKeys)):
 					if event.key == shootBulletKeys[i]:
 						ind = i
-						temp = bullet.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
+						temp = gameComponents.Bullet(tanks[ind].orientation, tanks[ind].center, ind)
 						bullets.append(temp)
 
 				for i in xrange(len(reverseGearKeys)):
@@ -247,7 +246,7 @@ def playGame(numberOfPlayers):
 		for i in xrange(4):
 			if playerIsAlive[i] == 0:
 				print "creating new ",i
-				tanks[i] = (tank.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
+				tanks[i] = (gameComponents.Tank(playerCoordinate[i], imageFilename[i], playerOrientation[i], 100, 50, playerLifeBarX[i], playerLifeBarY[i], playerLifeBarW, playerLifeBarH, playerBoostBarX[i], playerBoostBarY[i], playerBoostBarW, playerBoostBarH))
 				playerIsAlive[i] = 1
 
 		# move the tank
@@ -255,7 +254,7 @@ def playGame(numberOfPlayers):
 			if tanks[i].life <= 0:
 				tanks[i].isAlive = 0
 			tanks[i].updateCenter()
-			tanks[i].updateCoordinate(thisBoost[i])
+			tanks[i].updateCoordinate(thisBoost[i], unitDistance)
 
 		# make the base rectangle for the tank
 		for j in xrange(numberOfPlayers):
@@ -484,56 +483,56 @@ def playGame(numberOfPlayers):
 
 
 if __name__ == "__main__":
-		ip = ''
-		port = 12345
-		max_players = 4
-		q = Queue()
-		# UP = None
-		DOWN = None
-		UP = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_e),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_u),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_o)
-				]
-		LEFT = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_d),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_g),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_j)
-				]
-		RIGHT = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_f),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_h),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_k)
-				]
-		A = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_b),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
-				]
-		B = [
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
-				pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
-				]
+		# ip = ''
+		# port = 12345
+		# max_players = 4
+		# q = Queue()
+		# # UP = None
+		# DOWN = None
+		# UP = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_e),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_u),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_o)
+		# 		]
+		# LEFT = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_d),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_g),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_j)
+		# 		]
+		# RIGHT = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_f),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_h),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_k)
+		# 		]
+		# A = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_b),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_m)
+		# 		]
+		# B = [
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_w),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_r),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y),
+		# 		pygame.event.Event(pygame.KEYDOWN, key=pygame.K_i)
+		# 		]
 
-		thread.start_new_thread(Server.accept_connections, (ip, port, q, max_players, UP, DOWN, LEFT, RIGHT, A, B))
-		connections = 0
-		ready = 0
-		flag = 0
-		while True:
-			if connections == ready and flag == 1:
-				break
-			msg = q.get()
-			if msg == 'connect':
-				connections += 1
-			elif msg == 'Ready':
-				ready += 1
-			flag = 1
-		# ready = 4
+		# thread.start_new_thread(Server.accept_connections, (ip, port, q, max_players, UP, DOWN, LEFT, RIGHT, A, B))
+		# connections = 0
+		# ready = 0
+		# flag = 0
+		# while True:
+		# 	if connections == ready and flag == 1:
+		# 		break
+		# 	msg = q.get()
+		# 	if msg == 'connect':
+		# 		connections += 1
+		# 	elif msg == 'Ready':
+		# 		ready += 1
+		# 	flag = 1
+		ready = 4
 		playGame(ready)
 
