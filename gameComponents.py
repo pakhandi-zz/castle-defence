@@ -9,6 +9,8 @@ import computation
         2> orientation      : The current orientation of the bullet in radians
         3> firedBy          : Id of the entity to which this bullet belongs
 '''
+
+
 class Bullet:
     timeTravelled = 0
     orientation = 0
@@ -27,7 +29,13 @@ class Bullet:
         self.coordinate = (self.coordinate[0] + (x * unitDistance * math.cos(math.radians(deg))),
                            self.coordinate[1] + (y * unitDistance * math.sin(math.radians(deg))))
 
-
+'''
+    This class is to denote a Tank
+    A Tank has the following attributes:
+    1> orientation      : The current orientation of the tank in radians
+    2> imageFile        : The path to the file to load to display as tank
+    3> life             : how much life is left of the tank
+'''
 class Tank:
     # position of the tank
     coordinate = (0, 0)
