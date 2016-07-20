@@ -29,6 +29,7 @@ class Bullet:
         self.coordinate = (self.coordinate[0] + (x * unitDistance * math.cos(math.radians(deg))),
                            self.coordinate[1] + (y * unitDistance * math.sin(math.radians(deg))))
 
+
 '''
     This class is to denote a Tank
     A Tank has the following attributes:
@@ -36,6 +37,8 @@ class Bullet:
     2> imageFile        : The path to the file to load to display as tank
     3> life             : how much life is left of the tank
 '''
+
+
 class Tank:
     # position of the tank
     coordinate = (0, 0)
