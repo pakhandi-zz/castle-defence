@@ -262,10 +262,10 @@ def playGame(numberOfPlayers):
         for j in xrange(numberOfPlayers):
             rect = tanks[j].mobileCursor.get_rect()
             rect.center = tanks[j].center
-            if (tanks[j].orientation > 15 and tanks[j].orientation < 75) or (
-                    tanks[j].orientation > 105 and tanks[j].orientation < 165) or (
-                    tanks[j].orientation > 195 and tanks[j].orientation < 235) or (
-                    tanks[j].orientation > 285 and tanks[j].orientation < 345):
+            if (15 < tanks[j].orientation < 75) or (
+                            105 < tanks[j].orientation < 165) or (
+                            195 < tanks[j].orientation < 235) or (
+                            285 < tanks[j].orientation < 345):
                 rect = rect.inflate(-20, -20)
             elif tanks[j].orientation % 90 != 0:
                 rect = rect.inflate(-10, -10)
@@ -279,9 +279,9 @@ def playGame(numberOfPlayers):
             for j in xrange(numberOfPlayers):
                 rect = tanks[j].rectangle
                 if rect.collidepoint(bullets[i].coordinate) and bulletIsAlive[i] == 1:
-                    tanks[j].life = tanks[j].life - BULLET_DAMAGE
+                    tanks[j].life -= BULLET_DAMAGE
                     if tanks[j].life <= 0:
-                        playerDied[j] = playerDied[j] + 1
+                        playerDied[j] += 1
                         playerKilled[bullets[i].firedBy] += 1
                         playerIsAlive[j] = 0
                     bulletIsAlive[i] = 0
@@ -346,7 +346,7 @@ def playGame(numberOfPlayers):
 
         # increase living time of bullets
         for i in xrange(len(bullets)):
-            bullets[i].timeTravelled = bullets[i].timeTravelled + 1
+            bullets[i].timeTravelled += 1
             if bullets[i].timeTravelled >= bulletLifeTime:
                 bulletIsAlive[i] = 0
 
@@ -355,7 +355,7 @@ def playGame(numberOfPlayers):
         for i in xrange(len(bulletIsAlive)):
             if bulletIsAlive[i] == 0:
                 bullets.pop(i - removed)
-                removed = removed + 1
+                removed += 1
 
         # Collision of tanks
         for i in xrange(numberOfPlayers):
@@ -369,8 +369,8 @@ def playGame(numberOfPlayers):
                 if rect1.colliderect(rect2) == 1:
                     playerIsAlive[i] = 0
                     playerIsAlive[j] = 0
-                    playerDied[i] = playerDied[i] + 1
-                    playerDied[j] = playerDied[j] + 1
+                    playerDied[i] += 1
+                    playerDied[j] += 1
 
         screen.fill(BLACK)
         i = 0
