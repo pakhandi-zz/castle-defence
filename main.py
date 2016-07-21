@@ -1,6 +1,5 @@
 import pygame
 import sys
-import math
 from copy import deepcopy
 import Server
 import thread
@@ -415,7 +414,7 @@ def playGame(numberOfPlayers):
 
         # process bullets
         for i in xrange(len(bullets)):
-            bullets[i].timeTravelled = bullets[i].timeTravelled + 1
+            bullets[i].timeTravelled += 1
             bullets[i].updateCoordinate(1.5)
             pygame.draw.circle(screen, BLACK, (int(bullets[i].coordinate[0]), int(bullets[i].coordinate[1])), 2, 0)
 
@@ -425,7 +424,7 @@ def playGame(numberOfPlayers):
             screen.blit(electrics[etype], point)
         for point in electricsHorizontolCoordinates:
             screen.blit(electricsHorizontol[etype], point)
-        pygame.draw.rect(screen, BLUE, [100, 5, (float(currTime) / (float)(TOTAL_TIME)) * 1000, 5])
+        pygame.draw.rect(screen, BLUE, [100, 5, (float(currTime) / float(TOTAL_TIME)) * 1000, 5])
 
         # display tanks
         for i in xrange(numberOfPlayers):
