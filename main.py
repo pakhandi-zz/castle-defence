@@ -39,11 +39,7 @@ def playGame(numberOfPlayers):
     bullets = []
 
     # centers for the towers
-    centers = []
-    centers.append((60, 60))
-    centers.append((width - 60, height - 60))
-    centers.append((width - 60, 60))
-    centers.append((60, height - 60))
+    centers = [(60, 60), (width - 60, height - 60), (width - 60, 60), (60, height - 60)]
 
     # walls
     walls = []
@@ -60,11 +56,7 @@ def playGame(numberOfPlayers):
     playerIsAlive = [1 for i in xrange(4)]
 
     # coordinate of every player
-    playerCoordinate = []
-    playerCoordinate.append((100, 100))
-    playerCoordinate.append((width - 140, height - 140))
-    playerCoordinate.append((width - 140, 100))
-    playerCoordinate.append((100, height - 140))
+    playerCoordinate = [(100, 100), (width - 140, height - 140), (width - 140, 100), (100, height - 140)]
 
     # imagefilenames
     imageFilename = ['images/green_tank.png', 'images/red_tank.png', 'images/blue_tank.png', 'images/yellow_tank.png']
@@ -92,15 +84,9 @@ def playGame(numberOfPlayers):
     playerDied = [0 for i in xrange(4)]
     playerKilled = [0 for i in xrange(4)]
 
-    # castleLife
-    castleLife = [500 for i in xrange(4)]
-
     # flames images
-    flames = []
-
-    flames.append(pygame.image.load('images/flames0.png'))
-    flames.append(pygame.image.load('images/flames1.png'))
-    flames.append(pygame.image.load('images/flames2.png'))
+    flames = [pygame.image.load('images/flames0.png'), pygame.image.load('images/flames1.png'),
+              pygame.image.load('images/flames2.png')]
 
     # flames coordinate
 
@@ -434,7 +420,6 @@ def playGame(numberOfPlayers):
         pygame.display.update()
         clock.tick(80)
 
-    # return
     # Game over screen
     screen.fill(BLACK)
     pygame.display.update()
