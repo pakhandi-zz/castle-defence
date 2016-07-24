@@ -1,11 +1,10 @@
-import pygame
 import sys
-from copy import deepcopy
 import Server
+import pygame
 import thread
-from Queue import Queue
-
 import gameComponents
+from Queue import Queue
+from copy import deepcopy
 
 pygame.init()
 pygame.display.init()
