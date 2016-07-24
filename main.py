@@ -89,16 +89,14 @@ def playGame(numberOfPlayers):
               pygame.image.load('images/flames2.png')]
 
     # flames coordinate
-
     flamesCoordinate = []
-
     i = 0
     while True:
         if i > width + 20:
             break
         flamesCoordinate.append((i, 0))
         flamesCoordinate.append((i, height - 20))
-        i = i + 20
+        i += 20
 
     i = 0
     while True:
@@ -127,28 +125,28 @@ def playGame(numberOfPlayers):
         if i >= 200:
             break
         electricsCoordinates.append((width / 2, i))
-        i = i + 40
+        i += 40
 
     i = height - 200
     while True:
         if i >= height:
             break
         electricsCoordinates.append((width / 2, i))
-        i = i + 40
+        i += 40
 
     i = 0
     while True:
         if i >= 300:
             break
         electricsHorizontolCoordinates.append((i, height / 2))
-        i = i + 40
+        i += 40
 
     i = width - 300
     while True:
         if i >= width:
             break
         electricsHorizontolCoordinates.append((i, height / 2))
-        i = i + 40
+        i += 40
 
     # electrics rectangle
     electricsRectangle = [pygame.rect for i in xrange(4)]
