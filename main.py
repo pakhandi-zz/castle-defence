@@ -28,12 +28,11 @@ def playGame(numberOfPlayers):
     currTime = TOTAL_TIME
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Castle Defence")
+    screen.fill(BLACK)
 
     font1 = pygame.font.SysFont('Arial', 20)
 
     font2 = pygame.font.SysFont('Arial', 40)
-
-    screen.fill(BLACK)
 
     bullets = []
 
