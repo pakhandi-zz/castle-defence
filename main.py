@@ -31,7 +31,6 @@ def playGame(numberOfPlayers):
     screen.fill(BLACK)
 
     font1 = pygame.font.SysFont('Arial', 20)
-
     font2 = pygame.font.SysFont('Arial', 40)
 
     bullets = []
@@ -99,20 +98,20 @@ def playGame(numberOfPlayers):
     i = 0
     while True:
         if i > height + 20:
-            break;
+            break
         flamesCoordinate.append((0, i))
         flamesCoordinate.append((width - 20, i))
-        i = i + 20
+        i += 20
 
     # electric images
     electrics = []
-    electricsHorizontol = []
+    electricsHorizontal = []
 
     electrics.append(pygame.image.load('images/electric0.png'))
     electrics.append(pygame.image.load('images/electric1.png'))
 
-    electricsHorizontol.append(pygame.transform.rotate(electrics[0], 90))
-    electricsHorizontol.append(pygame.transform.rotate(electrics[1], 90))
+    electricsHorizontal.append(pygame.transform.rotate(electrics[0], 90))
+    electricsHorizontal.append(pygame.transform.rotate(electrics[1], 90))
 
     # electrics coordinate
     electricsCoordinates = []
@@ -405,7 +404,7 @@ def playGame(numberOfPlayers):
         for point in electricsCoordinates:
             screen.blit(electrics[etype], point)
         for point in electricsHorizontolCoordinates:
-            screen.blit(electricsHorizontol[etype], point)
+            screen.blit(electricsHorizontal[etype], point)
         pygame.draw.rect(screen, BLUE, [100, 5, (float(currTime) / float(TOTAL_TIME)) * 1000, 5])
 
         # display tanks
