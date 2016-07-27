@@ -160,8 +160,6 @@ def playGame(numberOfPlayers):
     isRunning = True
     clock = pygame.time.Clock()
 
-    bulletDistance = 1.5
-
     unitDistance = 0.5
     ftype = 0
     etype = 0
@@ -186,11 +184,10 @@ def playGame(numberOfPlayers):
     while isRunning:
         currTime -= 1
         if currTime == 0:
-            break;
+            break
         thisBoost = [0 for i in xrange(4)]
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                TOTAL_TIME = 0
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
                 for i in xrange(len(rotateAntiClockwiseKeys)):
