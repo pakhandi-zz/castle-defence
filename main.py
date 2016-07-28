@@ -251,7 +251,6 @@ def playGame(numberOfPlayers):
         bulletIsAlive = [1 for i in xrange(len(bullets))]
 
         # Collision with bullet
-
         for i in xrange(len(bullets)):
             for j in xrange(numberOfPlayers):
                 rect = tanks[j].rectangle
@@ -449,7 +448,6 @@ def playGame(numberOfPlayers):
 
     toPrint = [(950, 200), (950, 320), (950, 440), (950, 560)]
     for i in xrange(numberOfPlayers):
-        val = total_score[i][0]
         screen.blit(font2.render(str(total_score[i][1]), True, WHITE), toPrint[i])
 
     pygame.display.update()
