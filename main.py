@@ -146,7 +146,7 @@ def playGame(numberOfPlayers):
         i += 40
 
     # electrics rectangle
-    electricsRectangle = [pygame.rect for i in xrange(4)]
+    electricsRectangle = [pygame.Rect for i in xrange(4)]
     electricsRectangle[0] = pygame.Rect(width / 2, 0, 20, 200)
     electricsRectangle[1] = pygame.Rect(width / 2, height - 200, 20, 200)
     electricsRectangle[2] = pygame.Rect(0, height / 2, 300, 20)
