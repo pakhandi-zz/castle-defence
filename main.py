@@ -27,7 +27,7 @@ def playGame(numberOfPlayers):
     TOTAL_TIME = 100000 / 5
     currTime = TOTAL_TIME
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Castle Defence")
+    pygame.display.set_caption('Castle Defence')
     screen.fill(BLACK)
 
     font1 = pygame.font.SysFont('Arial', 20)
@@ -414,11 +414,11 @@ def playGame(numberOfPlayers):
     # Game over screen
     screen.fill(BLACK)
     pygame.display.update()
-    screen.blit(font2.render("RANK", True, WHITE), (150, 100))
-    screen.blit(font2.render("PLAYER", True, WHITE), (320, 100))
-    screen.blit(font2.render("KILLS", True, WHITE), (550, 100))
-    screen.blit(font2.render("DEATHS", True, WHITE), (720, 100))
-    screen.blit(font2.render("TOTAL", True, WHITE), (930, 100))
+    screen.blit(font2.render('RANK', True, WHITE), (150, 100))
+    screen.blit(font2.render('PLAYER', True, WHITE), (320, 100))
+    screen.blit(font2.render('KILLS', True, WHITE), (550, 100))
+    screen.blit(font2.render('DEATHS', True, WHITE), (720, 100))
+    screen.blit(font2.render('TOTAL', True, WHITE), (930, 100))
 
     color = [GREEN, RED, BLUE, YELLOW]
     toPrint = [(400, 220), (400, 340), (400, 460), (400, 580)]
