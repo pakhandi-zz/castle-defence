@@ -50,7 +50,7 @@ def playGame(numberOfPlayers):
         walls.append((i, height / 2))
 
     # player is alive
-    playerIsAlive = [1 for i in xrange(4)]
+    playerIsAlive = [1 for i in xrange(numberOfPlayers)]
 
     # coordinate of every player
     playerCoordinate = [(100, 100), (width - 140, height - 140), (width - 140, 100), (100, height - 140)]
@@ -115,7 +115,7 @@ def playGame(numberOfPlayers):
 
     # electrics coordinate
     electricsCoordinates = []
-    electricsHorizontolCoordinates = []
+    electricsHorizontalCoordinates = []
 
     i = 0
     while True:
@@ -135,14 +135,14 @@ def playGame(numberOfPlayers):
     while True:
         if i >= 300:
             break
-        electricsHorizontolCoordinates.append((i, height / 2))
+        electricsHorizontalCoordinates.append((i, height / 2))
         i += 40
 
     i = width - 300
     while True:
         if i >= width:
             break
-        electricsHorizontolCoordinates.append((i, height / 2))
+        electricsHorizontalCoordinates.append((i, height / 2))
         i += 40
 
     # electrics rectangle
@@ -399,7 +399,7 @@ def playGame(numberOfPlayers):
         etype = (etype + 1) % 2
         for point in electricsCoordinates:
             screen.blit(electrics[etype], point)
-        for point in electricsHorizontolCoordinates:
+        for point in electricsHorizontalCoordinates:
             screen.blit(electricsHorizontal[etype], point)
         pygame.draw.rect(screen, BLUE, [100, 5, (float(currTime) / float(TOTAL_TIME)) * 1000, 5])
 
