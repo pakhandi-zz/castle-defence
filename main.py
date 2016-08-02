@@ -35,6 +35,10 @@ def playGame(numberOfPlayers):
 
     bullets = []
 
+    # points
+    playerDied = [0 for i in xrange(4)]
+    playerKilled = [0 for i in xrange(4)]
+
     # centers for the towers
     centers = [(60, 60), (width - 60, height - 60), (width - 60, 60), (60, height - 60)]
 
@@ -77,10 +81,6 @@ def playGame(numberOfPlayers):
     playerBoostBarW = 100
     playerBoostBarH = 5
 
-    # points
-    playerDied = [0 for i in xrange(4)]
-    playerKilled = [0 for i in xrange(4)]
-
     # flames images
     flames = [pygame.image.load('images/flames0.png'), pygame.image.load('images/flames1.png'),
               pygame.image.load('images/flames2.png')]
@@ -104,14 +104,9 @@ def playGame(numberOfPlayers):
         i += 20
 
     # electric images
-    electrics = []
-    electricsHorizontal = []
+    electrics = [pygame.image.load('images/electric0.png'), pygame.image.load('images/electric1.png')]
 
-    electrics.append(pygame.image.load('images/electric0.png'))
-    electrics.append(pygame.image.load('images/electric1.png'))
-
-    electricsHorizontal.append(pygame.transform.rotate(electrics[0], 90))
-    electricsHorizontal.append(pygame.transform.rotate(electrics[1], 90))
+    electricsHorizontal = [pygame.transform.rotate(electrics[0], 90), pygame.transform.rotate(electrics[1], 90)]
 
     # electrics coordinate
     electricsCoordinates = []
