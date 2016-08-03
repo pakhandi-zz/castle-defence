@@ -117,7 +117,4 @@ class Tank:
             self.coordinate[1] + (y * self.reverse * boostVal * unitDistance * math.sin(math.radians(deg))))
 
     def toggleReverse(self):
-        if self.reverse == 1:
-            self.reverse = -1
-        else:
-            self.reverse = 1
+        self.reverse = 1 if self.reverse == -1 else 1
