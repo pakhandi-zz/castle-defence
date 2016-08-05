@@ -74,7 +74,6 @@ class Tank:
 
     def __init__(self, (X, Y), imageFile, orientation, life, boost, lifeBarX, lifeBarY, lifeBarW, lifeBarH, boostBarX,
                  boostBarY, boostBarW, boostBarH):
-
         self.coordinate = (X, Y)
         self.imageFile = imageFile
         self.orientation = orientation
@@ -101,7 +100,6 @@ class Tank:
         self.mobileCursor = pygame.transform.rotate(self.fixedCursor, self.orientation)
 
     def updateCenter(self):
-        deg, x, y = computation.getDirection(self.orientation)
         self.center = self.mobileCursor.get_rect().center
         self.center = (self.center[0] + self.coordinate[0], self.center[1] + self.coordinate[1])
 
