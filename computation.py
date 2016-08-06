@@ -1,3 +1,9 @@
+'''
+    This function returns:
+    1> angle :  The angle between y-axis and the orientation
+    2> x     :  The x value for this angle (if propagated one unit)
+    3> y     :  The y value for this angle (if propogated one unit)
+'''
 def getDirection(orientation):
     deg = orientation
     x = +1
